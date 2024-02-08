@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,7 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model ScrapedData {
+model opertationstatus {
+  id        Int      @id @default(autoincrement())
+  timestamp DateTime @default(now())
+  status    Boolean
+}
+
+model prediction {
+  id        Int      @id @default(autoincrement())
+  timestamp DateTime @default(now())
+  pred      Float
+}
+
+model scrapeddata {
   id                      Int      @id @default(autoincrement())
   timestamp               DateTime @default(now())
   btc_open                Float?
@@ -36,38 +45,32 @@ model ScrapedData {
   EMA50                   Float?
   EMA20                   Float?
   RSI                     Float?
-
-  // AvgTone fields
-  AvgTone_event_1  Float?
-  AvgTone_event_2  Float?
-  AvgTone_event_3  Float?
-  AvgTone_event_4  Float?
-  AvgTone_event_5  Float?
-  AvgTone_event_6  Float?
-  AvgTone_event_7  Float?
-  AvgTone_event_8  Float?
-  AvgTone_event_9  Float?
-  AvgTone_event_10 Float?
-  AvgTone_event_11 Float?
-  AvgTone_event_12 Float?
-  AvgTone_event_13 Float?
-
-  // EventCode fields
-  EventCode_event_1  Int?
-  EventCode_event_2  Int?
-  EventCode_event_3  Int?
-  EventCode_event_4  Int?
-  EventCode_event_5  Int?
-  EventCode_event_6  Int?
-  EventCode_event_7  Int?
-  EventCode_event_8  Int?
-  EventCode_event_9  Int?
-  EventCode_event_10 Int?
-  EventCode_event_11 Int?
-  EventCode_event_12 Int?
-  EventCode_event_13 Int?
-
-  // GoldsteinScale fields
+  AvgTone_event_1         Float?
+  AvgTone_event_2         Float?
+  AvgTone_event_3         Float?
+  AvgTone_event_4         Float?
+  AvgTone_event_5         Float?
+  AvgTone_event_6         Float?
+  AvgTone_event_7         Float?
+  AvgTone_event_8         Float?
+  AvgTone_event_9         Float?
+  AvgTone_event_10        Float?
+  AvgTone_event_11        Float?
+  AvgTone_event_12        Float?
+  AvgTone_event_13        Float?
+  EventCode_event_1       Int?
+  EventCode_event_2       Int?
+  EventCode_event_3       Int?
+  EventCode_event_4       Int?
+  EventCode_event_5       Int?
+  EventCode_event_6       Int?
+  EventCode_event_7       Int?
+  EventCode_event_8       Int?
+  EventCode_event_9       Int?
+  EventCode_event_10      Int?
+  EventCode_event_11      Int?
+  EventCode_event_12      Int?
+  EventCode_event_13      Int?
   GoldsteinScale_event_1  Float?
   GoldsteinScale_event_2  Float?
   GoldsteinScale_event_3  Float?
@@ -81,53 +84,36 @@ model ScrapedData {
   GoldsteinScale_event_11 Float?
   GoldsteinScale_event_12 Float?
   GoldsteinScale_event_13 Float?
-
-  // NumArticles fields
-  NumArticles_event_1  Int?
-  NumArticles_event_2  Int?
-  NumArticles_event_3  Int?
-  NumArticles_event_4  Int?
-  NumArticles_event_5  Int?
-  NumArticles_event_6  Int?
-  NumArticles_event_7  Int?
-  NumArticles_event_8  Int?
-  NumArticles_event_9  Int?
-  NumArticles_event_10 Int?
-  NumArticles_event_11 Int?
-  NumArticles_event_12 Int?
-  NumArticles_event_13 Int?
-
-  // NumMentions fields
-  NumMentions_event_1  Int?
-  NumMentions_event_2  Int?
-  NumMentions_event_3  Int?
-  NumMentions_event_4  Int?
-  NumMentions_event_5  Int?
-  NumMentions_event_6  Int?
-  NumMentions_event_7  Int?
-  NumMentions_event_8  Int?
-  NumMentions_event_9  Int?
-  NumMentions_event_10 Int?
-  NumMentions_event_11 Int?
-  NumMentions_event_12 Int?
-  NumMentions_event_13 Int?
+  NumArticles_event_1     Int?
+  NumArticles_event_2     Int?
+  NumArticles_event_3     Int?
+  NumArticles_event_4     Int?
+  NumArticles_event_5     Int?
+  NumArticles_event_6     Int?
+  NumArticles_event_7     Int?
+  NumArticles_event_8     Int?
+  NumArticles_event_9     Int?
+  NumArticles_event_10    Int?
+  NumArticles_event_11    Int?
+  NumArticles_event_12    Int?
+  NumArticles_event_13    Int?
+  NumMentions_event_1     Int?
+  NumMentions_event_2     Int?
+  NumMentions_event_3     Int?
+  NumMentions_event_4     Int?
+  NumMentions_event_5     Int?
+  NumMentions_event_6     Int?
+  NumMentions_event_7     Int?
+  NumMentions_event_8     Int?
+  NumMentions_event_9     Int?
+  NumMentions_event_10    Int?
+  NumMentions_event_11    Int?
+  NumMentions_event_12    Int?
+  NumMentions_event_13    Int?
 }
 
-model OpertationStatus {
-  id        Int      @id @default(autoincrement())
-  timestamp DateTime @default(now())
-  status    Boolean
-}
-
-model Prediction {
-  id        Int      @id @default(autoincrement())
-  timestamp DateTime @default(now())
-  pred      Float
-}
-
-model Tradingdata {
+model tradingdata {
   id                 Int      @id @default(autoincrement())
-  timestamp          DateTime @default(now())
   before_trade_close Float?
   after_trade_close  Float?
   close_fees         Float?
@@ -135,4 +121,10 @@ model Tradingdata {
   before_trade_open  Float?
   open_fees          Float?
   leverage           Float?
+  timestamp          DateTime @default(now())
+}
+
+model user {
+  id       Int      @id @default(autoincrement())
+  name     String?
 }
