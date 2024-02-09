@@ -4,7 +4,7 @@ import { PiCurrencyBtc } from "react-icons/pi";
 const Dashboard = async () => {
   const tradeData = await prisma.tradingdata.findFirst({
     orderBy: {
-      id: "desc", // Assuming 'id' is the name of your ID field
+      id: "desc",
     },
   });
   const result = tradeData!.after_trade_open ?? tradeData!.before_trade_close;
