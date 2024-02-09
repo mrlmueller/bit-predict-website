@@ -59,7 +59,7 @@ const Dashboard = async () => {
   return (
     <div>
       <div className="mb-8 text-3xl">Dashboard</div>
-      <Grid columns="1" gap="6" className="w-2/5">
+      <Grid columns="1" gap="6" className="w-5/5 xl:w-2/5 md:w-3/5">
         <Card>
           <InvestmentCard change={false} title="Total Investment" value="70.01">
             <MdOutlineAttachMoney size={38} color="#444444" />
