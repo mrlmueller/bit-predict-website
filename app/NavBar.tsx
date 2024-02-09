@@ -1,9 +1,8 @@
 "use client";
 
+import Image from "next/image"; // Import the Image component
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FaBtc } from "react-icons/fa";
-import React from "react";
 
 const NavBar = () => {
   const currentPath = usePathname();
@@ -14,9 +13,14 @@ const NavBar = () => {
   ];
 
   return (
-    <nav className="flex space-x-6 border-b mb-5 px-5 h-14 items-center">
+    <nav className="flex space-x-6 mb-5 px-5 h-14 items-center">
       <Link href="/">
-        <FaBtc />
+        <Image
+          src="/favicon.ico" // Assuming favicon.ico is in the public folder
+          alt="Logo"
+          width={30} // Set the width as needed
+          height={30} // Set the height as needed
+        />
       </Link>
       <ul className="flex space-x-6">
         {links.map((link) => (
