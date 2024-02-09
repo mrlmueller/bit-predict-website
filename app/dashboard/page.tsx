@@ -60,7 +60,7 @@ const Dashboard = async () => {
       <div className="mb-8 text-3xl">Dashboard</div>
       <Grid columns="1" gap="6" className="w-2/5">
         <Card>
-          <InvestmentCard value={result!.toFixed(2)}>
+          <InvestmentCard title="Total Investment" value="70.02">
             <PiCurrencyBtc size={38} color="#444444" />
           </InvestmentCard>
         </Card>
@@ -102,6 +102,14 @@ const Dashboard = async () => {
               ))}
             </Table.Body>
           </Table.Root>
+        </Card>
+        <Card>
+          <InvestmentCard
+            title="Current Investment Value"
+            value={result!.toFixed(2)}
+          >
+            <PiCurrencyBtc size={38} color="#444444" />
+          </InvestmentCard>
         </Card>
       </Grid>
     </div>
