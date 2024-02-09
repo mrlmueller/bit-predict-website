@@ -5,6 +5,7 @@ import UpDownCard from "./upDownCard";
 import FormattedDate from "../components/FormatDate";
 import Card from "../components/Card";
 import InvestmentCard from "./InvestmentCard";
+import { MdOutlineAttachMoney } from "react-icons/md";
 
 const Dashboard = async () => {
   const tradeData = await prisma.tradingdata.findFirst({
@@ -60,8 +61,8 @@ const Dashboard = async () => {
       <div className="mb-8 text-3xl">Dashboard</div>
       <Grid columns="1" gap="6" className="w-2/5">
         <Card>
-          <InvestmentCard title="Total Investment" value="70.02">
-            <PiCurrencyBtc size={38} color="#444444" />
+          <InvestmentCard change={false} title="Total Investment" value="70.01">
+            <MdOutlineAttachMoney size={38} color="#444444" />
           </InvestmentCard>
         </Card>
         <Card>
