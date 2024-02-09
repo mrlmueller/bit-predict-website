@@ -1,7 +1,10 @@
 import prisma from "@/prisma/client";
-import { Table } from "@radix-ui/themes";
+import { Box, Grid, Table } from "@radix-ui/themes";
 import { PiCurrencyBtc } from "react-icons/pi";
 import UpDownCard from "./upDownCard";
+import FormattedDate from "../components/FormatDate";
+import Card from "../components/Card";
+import InvestmentCard from "./InvestmentCard";
 
 const Dashboard = async () => {
   const tradeData = await prisma.tradingdata.findFirst({
@@ -27,7 +30,6 @@ const Dashboard = async () => {
     },
   });
 
-  // Reverse the lists
   preds.reverse();
   actualData.reverse();
 
@@ -56,53 +58,42 @@ const Dashboard = async () => {
   return (
     <div>
       <div className="mb-8 text-3xl">Dashboard</div>
-      <div>
-        <div className="shadow-custom rounded-[25px] px-10 py-4 inline-block bg-[#fcfcfc] ">
-          <div className="flex justify-center items-center">
-            <div className="mr-10 xs:mr-[7rem]">
-              <p className="font-semibold ">Current Investment Value</p>
-              <p className="text-3xl font-bold mt-1">${result!.toFixed(2)}</p>
-            </div>
-            <div className=" w-16 h-16 aspect-square rounded-full flex justify-center items-center bg-[#D5B4EF]">
-              <PiCurrencyBtc size={38} color="#444444" />
-            </div>
-          </div>
-        </div>
-        <div className="shadow-custom rounded-[25px] px-10 py-4 inline-block bg-[#fcfcfc] mt-10">
+      <Grid columns="1" gap="6" className="w-2/5">
+        <Card>
+          <InvestmentCard value={result!.toFixed(2)}>
+            <PiCurrencyBtc size={38} color="#444444" />
+          </InvestmentCard>
+        </Card>
+        <Card>
+          <h2 className="text-xl mb-4 font-medium">Trades</h2>
           <Table.Root variant="ghost">
             <Table.Header>
               <Table.Row>
-                <Table.ColumnHeaderCell>Date</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell>Prediction</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell>Actual</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell>Result</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell className="font-semibold ">
+                  Date
+                </Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell className="font-semibold ">
+                  Prediction
+                </Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell className="font-semibold ">
+                  Actual
+                </Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell className="font-semibold ">
+                  Result
+                </Table.ColumnHeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
               {trades.map((trade, index) => (
                 <Table.Row key={trade.id}>
-                  <Table.Cell>{trade.timestamp.toDateString()}</Table.Cell>
                   <Table.Cell>
-                    <UpDownCard
-                      status={
-                        parseInt((preds[index]?.pred).toFixed(0)) === 1
-                          ? 1
-                          : parseInt((preds[index]?.pred).toFixed(0)) === 0
-                          ? 0
-                          : 1
-                      }
-                    ></UpDownCard>
+                    <FormattedDate>{trade.timestamp}</FormattedDate>
                   </Table.Cell>
                   <Table.Cell>
-                    <UpDownCard
-                      status={
-                        actualData[index]?.higher_lower === 1
-                          ? 1
-                          : actualData[index]?.higher_lower === 0
-                          ? 0
-                          : null // Provide null as the fallback instead of 1
-                      }
-                    ></UpDownCard>
+                    <UpDownCard prediction={preds[index]?.pred} />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <UpDownCard actual={actualData[index]?.higher_lower} />
                   </Table.Cell>
                   <Table.Cell>
                     {results[index] !== null ? `${results[index]} $` : ""}
@@ -111,8 +102,8 @@ const Dashboard = async () => {
               ))}
             </Table.Body>
           </Table.Root>
-        </div>
-      </div>
+        </Card>
+      </Grid>
     </div>
   );
 };
