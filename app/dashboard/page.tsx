@@ -1,11 +1,12 @@
 import prisma from "@/prisma/client";
-import { Box, Grid, Table } from "@radix-ui/themes";
-import { PiCurrencyBtc } from "react-icons/pi";
-import UpDownCard from "./upDownCard";
-import FormattedDate from "../components/FormatDate";
-import Card from "../components/Card";
-import InvestmentCard from "./InvestmentCard";
+import { Grid, Table } from "@radix-ui/themes";
 import { MdOutlineAttachMoney } from "react-icons/md";
+import { PiCurrencyBtc } from "react-icons/pi";
+import Card from "../components/Card";
+import FormattedDate from "../components/FormatDate";
+import PieChart from "../components/PieChart";
+import InvestmentCard from "./InvestmentCard";
+import UpDownCard from "./upDownCard";
 
 // Change how caching works
 const Dashboard = async () => {
@@ -59,6 +60,7 @@ const Dashboard = async () => {
 
   return (
     <div>
+      <PieChart></PieChart>
       <div className="mb-8 text-3xl">Dashboard</div>
       <Grid columns="1" gap="6" className="w-5/5 xl:w-2/5 md:w-3/5">
         <Card>
