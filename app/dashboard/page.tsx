@@ -7,6 +7,7 @@ import Card from "../components/Card";
 import InvestmentCard from "./InvestmentCard";
 import { MdOutlineAttachMoney } from "react-icons/md";
 
+// Change how caching works
 const Dashboard = async () => {
   const tradeData = await prisma.tradingdata.findFirst({
     orderBy: {
