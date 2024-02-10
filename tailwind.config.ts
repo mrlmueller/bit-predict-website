@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       screens: {
-        xs: "400px",
+        xs: "450px",
       },
       boxShadow: {
         custom: "0 0 20px 0 rgba(0, 0, 0, 0.1)", // Example shadow

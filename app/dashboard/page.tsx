@@ -73,7 +73,7 @@ const Dashboard = async () => {
           <Table.Root variant="ghost">
             <Table.Header>
               <Table.Row>
-                <Table.ColumnHeaderCell className="font-semibold ">
+                <Table.ColumnHeaderCell className="font-semibold  hidden xs:block">
                   Date
                 </Table.ColumnHeaderCell>
                 <Table.ColumnHeaderCell className="font-semibold ">
@@ -90,7 +90,7 @@ const Dashboard = async () => {
             <Table.Body>
               {trades.map((trade, index) => (
                 <Table.Row key={trade.id}>
-                  <Table.Cell>
+                  <Table.Cell className="hidden xs:block">
                     <FormattedDate>{trade.timestamp}</FormattedDate>
                   </Table.Cell>
                   <Table.Cell>
