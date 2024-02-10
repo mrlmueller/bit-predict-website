@@ -7,6 +7,7 @@ import FormattedDate from "../components/FormatDate";
 import PieChart from "../components/PieChart";
 import InvestmentCard from "./InvestmentCard";
 import UpDownCard from "./upDownCard";
+import Chart from "../components/Chart";
 
 // Change how caching works
 const Dashboard = async () => {
@@ -60,7 +61,10 @@ const Dashboard = async () => {
 
   return (
     <div>
-      <PieChart></PieChart>
+      {
+        //<PieChart></PieChart>
+        <Chart></Chart>
+      }
       <div className="mb-8 text-3xl">Dashboard</div>
       <Grid columns="1" gap="6" className="w-5/5 xl:w-2/5 md:w-3/5">
         <Card>
