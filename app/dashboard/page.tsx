@@ -120,4 +120,6 @@ const Dashboard = async () => {
   );
 };
 
+export const revalidate = 60;
+
 export default Dashboard;
