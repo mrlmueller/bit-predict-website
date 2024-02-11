@@ -11,6 +11,7 @@ import ChartLegend from "./ChartLegend";
 import CurrentPrediction from "../components/CurrentPrediction";
 import TimeFrameDisplay from "./TimeFrameDisplay";
 import dynamic from "next/dynamic";
+import PieChartComponent from "../components/PieChart";
 
 const PieChart = dynamic(() => import("../components/PieChart"), {
   ssr: false,
@@ -106,7 +107,16 @@ const Dashboard = async () => {
             {}
             {}
             <Card className="w-2/5 ml-7">
-              <PieChart data={data}></PieChart>
+              <PieChartComponent
+                data={data}
+                labelValue="Return"
+                legendTexts={{
+                  moneyLost: "Money Lost",
+                  accuracy: "Money Gained",
+                }}
+                title="Return Title"
+                timeFrame="Weekly" // Assuming you want to set the timeFrame to "Weekly"
+              />
             </Card>
             {}
             {}
