@@ -53,7 +53,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
   // Transform trades to chart data format
   const data = trades.map((trade) => ({
     name: formatDate(trade.timestamp), // Format date based on prop
-    value: trade.before_trade_close || 0,
+    value: trade.before_trade_close?.toFixed(2) || 0,
   }));
 
   return (
@@ -72,16 +72,27 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
         >
           <defs>
             <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#9544D7" stopOpacity={0.95} />
-              <stop offset="95%" stopColor="#9544D7" stopOpacity={0} />
+              <stop offset="0%" stopColor="#BB8CE1" stopOpacity={0.8} />
+              <stop offset="20%" stopColor="#BB8CE1" stopOpacity={0.6} />
+              <stop offset="40%" stopColor="#BB8CE1" stopOpacity={0.4} />
+              <stop offset="70%" stopColor="#BB8CE1" stopOpacity={0.16} />
+              <stop offset="100%" stopColor="#BB8CE1" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <XAxis dataKey="name" axisLine={false} tickLine={false} />
+          <XAxis
+            dataKey="name"
+            axisLine={false}
+            tickLine={false}
+            tickMargin={10} // Increase tick margin to push axis description away
+            tick={{ fontSize: 14 }} // Decrease font size to make text smaller
+          />
           <YAxis
             tickFormatter={formatYAxis}
             axisLine={false}
             tickLine={false}
-            domain={["auto", "auto"]} // Adjusted to use 'auto' for dynamic adjustment
+            domain={["auto", "auto"]}
+            tickMargin={10} // Increase tick margin to push axis description away
+            tick={{ fontSize: 14 }} // Decrease font size to make text smaller
           />
           <Tooltip cursor={false} />
           <Area
@@ -94,7 +105,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
           <ReferenceLine
             y={70}
             stroke="#FF732C"
-            strokeWidth={2}
+            strokeWidth={1.7}
             strokeDasharray="41 41"
             strokeLinecap="round"
           />

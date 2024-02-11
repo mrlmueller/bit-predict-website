@@ -7,6 +7,8 @@ import Chart from "../components/Chart";
 import FormattedDate from "../components/FormatDate";
 import InvestmentCard from "./InvestmentCard";
 import UpDownCard from "./upDownCard";
+import ChartLegend from "./ChartLegend";
+import CurrentPrediction from "../components/CurrentPrediction";
 
 // Change how caching works
 const Dashboard = async () => {
@@ -21,6 +23,12 @@ const Dashboard = async () => {
 
   const preds = await prisma.prediction.findMany({
     take: trades.length,
+    orderBy: {
+      id: "desc",
+    },
+  });
+
+  const currentPred = await prisma.prediction.findFirst({
     orderBy: {
       id: "desc",
     },
@@ -61,16 +69,34 @@ const Dashboard = async () => {
   return (
     <div>
       <div className="flex flex-col lg:flex-row">
-        <Flex className="max-h-chart w-full lg:w-3/5">
+        <Flex className="flex flex-col max-h-chart w-full lg:w-[60%]">
           <Card fullWidth={true}>
             <div className="flex justify-between items-center pb-9 mt-2">
               <h2 className="text-xl font-medium">Money Made/Lost</h2>
-              <div>
-                <Button disabled={true}>Weekly</Button>
+              <div className="flex items-center">
+                <ChartLegend color="purple">Portfolio Value</ChartLegend>
+                <ChartLegend color="orange">Break even</ChartLegend>
+                <div className=" inline-block rounded-md bg-gray-300 px-5 py-1 text-gray-700">
+                  Weekly
+                </div>
               </div>
             </div>
             <Chart dateFormat="day.month" trades={trades}></Chart>
           </Card>
+          <Flex>
+            <Card className="min-w-44">
+              <h2 className="text-xl font-medium mb-4">Prediciton</h2>
+              <CurrentPrediction
+                currentPred={parseInt(currentPred!.pred.toFixed(0))}
+              ></CurrentPrediction>
+            </Card>
+            <Card>
+              <div>Return</div>
+            </Card>
+            <Card>
+              <div>Accuracy</div>
+            </Card>
+          </Flex>
         </Flex>
         <Grid
           columns="1"
