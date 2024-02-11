@@ -66,7 +66,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
           margin={{
             top: 0,
             right: 0,
-            left: -20,
+            left: 0,
             bottom: 0,
           }}
         >
@@ -91,7 +91,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
             axisLine={false}
             tickLine={false}
             domain={["auto", "auto"]}
-            tickMargin={10} // Increase tick margin to push axis description away
+            tickMargin={14} // Increase tick margin to push axis description away
             tick={{ fontSize: 14 }} // Decrease font size to make text smaller
           />
           <Tooltip cursor={false} />

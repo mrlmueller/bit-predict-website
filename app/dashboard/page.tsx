@@ -70,7 +70,7 @@ const Dashboard = async () => {
     <div>
       <div className="flex flex-col lg:flex-row">
         <Flex className="flex flex-col max-h-chart w-full lg:w-[60%]">
-          <Card fullWidth={true}>
+          <Card fullWidth={true} className="pl-0 mb-8">
             <div className="flex justify-between items-center pb-9 mt-2">
               <h2 className="text-xl font-medium">Money Made/Lost</h2>
               <div className="flex items-center">
@@ -84,17 +84,17 @@ const Dashboard = async () => {
             <Chart dateFormat="day.month" trades={trades}></Chart>
           </Card>
           <Flex>
-            <Card className="min-w-44">
+            <Card className="w-1/5 ">
               <h2 className="text-xl font-medium mb-4">Prediciton</h2>
               <CurrentPrediction
                 currentPred={parseInt(currentPred!.pred.toFixed(0))}
               ></CurrentPrediction>
             </Card>
-            <Card>
-              <div>Return</div>
+            <Card className="w-2/5 ml-7">
+              <h2 className="text-xl font-medium mb-4">Return</h2>
             </Card>
-            <Card>
-              <div>Accuracy</div>
+            <Card className="w-2/5 ml-7">
+              <h2 className="text-xl font-medium mb-4">Accuracy</h2>
             </Card>
           </Flex>
         </Flex>
