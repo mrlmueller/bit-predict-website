@@ -60,9 +60,8 @@ const Dashboard = async () => {
 
   return (
     <div>
-      <div className="mb-8 text-3xl">Dashboard</div>
-      <div className="flex">
-        <Flex className="max-h-chart w-3/5">
+      <div className="flex flex-col lg:flex-row">
+        <Flex className="max-h-chart w-full lg:w-3/5">
           <Card fullWidth={true}>
             <div className="flex justify-between items-center pb-9 mt-2">
               <h2 className="text-xl font-medium">Money Made/Lost</h2>
@@ -73,7 +72,11 @@ const Dashboard = async () => {
             <Chart dateFormat="day.month" trades={trades}></Chart>
           </Card>
         </Flex>
-        <Grid columns="1" gap="6" className="ml-8 w-2/5">
+        <Grid
+          columns="1"
+          gap="6"
+          className="mt-8 lg:mt-0 lg:ml-8 w-full lg:w-2/5"
+        >
           <Card>
             <InvestmentCard
               change={false}
