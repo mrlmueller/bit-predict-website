@@ -9,7 +9,12 @@ import InvestmentCard from "./InvestmentCard";
 import UpDownCard from "./upDownCard";
 import ChartLegend from "./ChartLegend";
 import CurrentPrediction from "../components/CurrentPrediction";
+import TimeFrameDisplay from "./TimeFrameDisplay";
+import dynamic from "next/dynamic";
 
+const PieChart = dynamic(() => import("../components/PieChart"), {
+  ssr: false,
+});
 // Change how caching works
 const Dashboard = async () => {
   const tradeData = await prisma.tradingdata.findFirst({
@@ -66,19 +71,22 @@ const Dashboard = async () => {
     }
   });
 
+  const data = [
+    { name: "Group A", value: 5 },
+    { name: "Group B", value: 7 },
+  ];
+
   return (
     <div>
       <div className="flex flex-col lg:flex-row">
         <Flex className="flex flex-col max-h-chart w-full lg:w-[60%]">
           <Card fullWidth={true} className="pl-0 mb-8">
             <div className="flex justify-between items-center pb-9 mt-2">
-              <h2 className="text-xl font-medium">Money Made/Lost</h2>
+              <h2 className="ml-7 text-xl font-medium">Money Made/Lost</h2>
               <div className="flex items-center">
                 <ChartLegend color="purple">Portfolio Value</ChartLegend>
                 <ChartLegend color="orange">Break even</ChartLegend>
-                <div className=" inline-block rounded-md bg-gray-300 px-5 py-1 text-gray-700">
-                  Weekly
-                </div>
+                <TimeFrameDisplay timeFrame="Weekly"></TimeFrameDisplay>
               </div>
             </div>
             <Chart dateFormat="day.month" trades={trades}></Chart>
@@ -90,12 +98,33 @@ const Dashboard = async () => {
                 currentPred={parseInt(currentPred!.pred.toFixed(0))}
               ></CurrentPrediction>
             </Card>
+            {}
+            {}
+            {}
+            {}
+            {}
+            {}
+            {}
             <Card className="w-2/5 ml-7">
-              <h2 className="text-xl font-medium mb-4">Return</h2>
+              <PieChart data={data}></PieChart>
             </Card>
+            {}
+            {}
+            {}
+            {}
+            {}
+
             <Card className="w-2/5 ml-7">
               <h2 className="text-xl font-medium mb-4">Accuracy</h2>
             </Card>
+            {}
+            {}
+            {}
+            {}
+            {}
+            {}
+            {}
+            {}
           </Flex>
         </Flex>
         <Grid
