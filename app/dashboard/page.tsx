@@ -1,5 +1,5 @@
 import prisma from "@/prisma/client";
-import { Grid, Table } from "@radix-ui/themes";
+import { Container, Flex, Grid, Table } from "@radix-ui/themes";
 import { MdOutlineAttachMoney } from "react-icons/md";
 import { PiCurrencyBtc } from "react-icons/pi";
 import Card from "../components/Card";
@@ -61,65 +61,72 @@ const Dashboard = async () => {
 
   return (
     <div>
-      {
-        //<PieChart></PieChart>
-        <Chart></Chart>
-      }
       <div className="mb-8 text-3xl">Dashboard</div>
-      <Grid columns="1" gap="6" className="w-5/5 xl:w-2/5 md:w-3/5">
-        <Card>
-          <InvestmentCard change={false} title="Total Investment" value="70.01">
-            <MdOutlineAttachMoney size={38} color="#444444" />
-          </InvestmentCard>
-        </Card>
-        <Card>
-          <h2 className="text-xl mb-4 font-medium">Trades</h2>
-          <Table.Root variant="ghost">
-            <Table.Header>
-              <Table.Row>
-                <Table.ColumnHeaderCell className="font-semibold  hidden xs:block">
-                  Date
-                </Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell className="font-semibold ">
-                  Prediction
-                </Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell className="font-semibold ">
-                  Actual
-                </Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell className="font-semibold ">
-                  Result
-                </Table.ColumnHeaderCell>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {trades.map((trade, index) => (
-                <Table.Row key={trade.id}>
-                  <Table.Cell className="hidden xs:block">
-                    <FormattedDate>{trade.timestamp}</FormattedDate>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <UpDownCard prediction={preds[index]?.pred} />
-                  </Table.Cell>
-                  <Table.Cell>
-                    <UpDownCard actual={actualData[index]?.higher_lower} />
-                  </Table.Cell>
-                  <Table.Cell>
-                    {results[index] !== null ? `${results[index]} $` : ""}
-                  </Table.Cell>
+      <div className="flex">
+        <Flex className="w-3/5">
+          <Card fullWidth={true} px={5}>
+            <Chart></Chart>
+          </Card>
+        </Flex>
+        <Grid columns="1" gap="6" className="ml-8 w-2/5">
+          <Card>
+            <InvestmentCard
+              change={false}
+              title="Total Investment"
+              value="70.01"
+            >
+              <MdOutlineAttachMoney size={38} color="#444444" />
+            </InvestmentCard>
+          </Card>
+          <Card>
+            <h2 className="text-xl mb-4 font-medium">Trades</h2>
+            <Table.Root variant="ghost">
+              <Table.Header>
+                <Table.Row>
+                  <Table.ColumnHeaderCell className="font-semibold  hidden xs:block">
+                    Date
+                  </Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell className="font-semibold ">
+                    Prediction
+                  </Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell className="font-semibold ">
+                    Actual
+                  </Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell className="font-semibold ">
+                    Result
+                  </Table.ColumnHeaderCell>
                 </Table.Row>
-              ))}
-            </Table.Body>
-          </Table.Root>
-        </Card>
-        <Card>
-          <InvestmentCard
-            title="Current Investment Value"
-            value={result!.toFixed(2)}
-          >
-            <PiCurrencyBtc size={38} color="#444444" />
-          </InvestmentCard>
-        </Card>
-      </Grid>
+              </Table.Header>
+              <Table.Body>
+                {trades.map((trade, index) => (
+                  <Table.Row key={trade.id}>
+                    <Table.Cell className="hidden xs:block">
+                      <FormattedDate>{trade.timestamp}</FormattedDate>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <UpDownCard prediction={preds[index]?.pred} />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <UpDownCard actual={actualData[index]?.higher_lower} />
+                    </Table.Cell>
+                    <Table.Cell>
+                      {results[index] !== null ? `${results[index]} $` : ""}
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table.Root>
+          </Card>
+          <Card>
+            <InvestmentCard
+              title="Current Investment Value"
+              value={result!.toFixed(2)}
+            >
+              <PiCurrencyBtc size={38} color="#444444" />
+            </InvestmentCard>
+          </Card>
+        </Grid>
+      </div>
     </div>
   );
 };

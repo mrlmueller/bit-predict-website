@@ -1,64 +1,71 @@
 "use client";
-import React, { PureComponent } from "react";
+import { PureComponent } from "react";
 import {
-  AreaChart,
   Area,
+  AreaChart,
+  ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  ReferenceLine,
 } from "recharts";
 
 const data = [
   {
-    name: "Page A",
+    name: "01",
     uv: 4000,
     pv: 2400,
     amt: 2400,
   },
   {
-    name: "Page B",
+    name: "05",
     uv: 3000,
     pv: 1398,
     amt: 2210,
   },
   {
-    name: "Page C",
+    name: "10",
     uv: 2000,
     pv: 9800,
     amt: 2290,
   },
   {
-    name: "Page D",
+    name: "15",
     uv: 2780,
     pv: 3908,
     amt: 2000,
   },
   {
-    name: "Page E",
+    name: "20",
     uv: 1890,
     pv: 4800,
     amt: 2181,
   },
   {
-    name: "Page F",
+    name: "25",
     uv: 2390,
     pv: 3800,
     amt: 2500,
   },
   {
-    name: "Page G",
+    name: "30",
     uv: 3490,
     pv: 4300,
     amt: 2100,
   },
 ];
 
-export default class Example extends PureComponent {
-  // static demoUrl = "https://codesandbox.io/s/simple-area-chart-4ujxw";
+const formatYAxis = (tickItem: number): string => {
+  // Format numbers less than 1000 with one decimal place
+  // and numbers in thousands with 'k' representation
+  if (tickItem >= 1000) {
+    return `${(tickItem / 1000).toFixed(1)}k`; // Converts to 'k' format and retains one decimal place
+  } else {
+    return tickItem.toString(); // Keeps the number as is
+  }
+};
 
+export default class Example extends PureComponent {
   render() {
     return (
       <ResponsiveContainer width="100%" height={400}>
@@ -67,7 +74,7 @@ export default class Example extends PureComponent {
           height={400}
           data={data}
           margin={{
-            top: 10,
+            top: 0,
             right: 30,
             left: 0,
             bottom: 0,
@@ -80,20 +87,24 @@ export default class Example extends PureComponent {
               <stop offset="99%" stopColor="#9544D7" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <XAxis dataKey="name" />
-          <YAxis />
+          <XAxis dataKey="name" axisLine={false} tickLine={false} />
+          <YAxis
+            tickFormatter={formatYAxis}
+            axisLine={false}
+            tickLine={false}
+          />
           <Tooltip />
           <Area
             type="monotone"
             dataKey="uv"
-            strokeWidth={4}
+            strokeWidth={2.5}
             stroke="#9544D7"
             fill="url(#colorUv)"
           />
           <ReferenceLine
             y={2000}
             stroke="#FF732C"
-            strokeWidth={3}
+            strokeWidth={2}
             strokeDasharray="41 41"
             strokeLinecap="round"
           />
