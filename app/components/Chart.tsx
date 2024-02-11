@@ -10,81 +10,70 @@ import {
   YAxis,
 } from "recharts";
 
-const data = [
-  {
-    name: "01",
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "05",
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: "10",
-    uv: 2000,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: "15",
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: "20",
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: "25",
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "30",
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-];
-
 const formatYAxis = (tickItem: number): string => {
-  // Format numbers less than 1000 with one decimal place
-  // and numbers in thousands with 'k' representation
   if (tickItem >= 1000) {
-    return `${(tickItem / 1000).toFixed(1)}k`; // Converts to 'k' format and retains one decimal place
+    return `${(tickItem / 1000).toFixed(1)}k`;
   } else {
-    return tickItem.toString(); // Keeps the number as is
+    return tickItem.toString();
   }
 };
 
-export default class Example extends PureComponent {
-  render() {
-    return (
-      <ResponsiveContainer width="100%" height={400}>
+interface Trade {
+  id: number;
+  before_trade_close: number | null;
+  after_trade_close: number | null;
+  close_fees: number | null;
+  after_trade_open: number | null;
+  before_trade_open: number | null;
+  open_fees: number | null;
+  leverage: number | null;
+  timestamp: Date;
+}
+
+interface ChartComponentProps {
+  trades: Trade[];
+  dateFormat: "day.month" | "day"; // Prop to choose date format
+}
+
+const ChartComponent: React.FC<ChartComponentProps> = ({
+  trades,
+  dateFormat,
+}) => {
+  // Helper function to format date based on prop
+  const formatDate = (date: Date): string => {
+    const day = date.getDate();
+    const month = date.getMonth() + 1; // JavaScript months are 0-indexed
+    if (dateFormat === "day.month") {
+      return `${day}.${month}`;
+    } else {
+      return `${day}`;
+    }
+  };
+
+  // Transform trades to chart data format
+  const data = trades.map((trade) => ({
+    name: formatDate(trade.timestamp), // Format date based on prop
+    value: trade.before_trade_close || 0,
+  }));
+
+  return (
+    <div className="mt-5">
+      <ResponsiveContainer width="100%" height={300}>
         <AreaChart
           width={500}
           height={400}
           data={data}
           margin={{
             top: 0,
-            right: 30,
-            left: 0,
+            right: 0,
+            left: -20,
             bottom: 0,
           }}
         >
           <defs>
             <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#9544D7" stopOpacity={0.95} />
-              <stop offset="70%" stopColor="#9544D7" stopOpacity={0.12} />
-              <stop offset="99%" stopColor="#9544D7" stopOpacity={0} />
+              <stop offset="95%" stopColor="#9544D7" stopOpacity={0} />
             </linearGradient>
           </defs>
           <XAxis dataKey="name" axisLine={false} tickLine={false} />
@@ -92,17 +81,18 @@ export default class Example extends PureComponent {
             tickFormatter={formatYAxis}
             axisLine={false}
             tickLine={false}
+            domain={["auto", "auto"]} // Adjusted to use 'auto' for dynamic adjustment
           />
-          <Tooltip />
+          <Tooltip cursor={false} />
           <Area
             type="monotone"
-            dataKey="uv"
+            dataKey="value"
             strokeWidth={2.5}
             stroke="#9544D7"
             fill="url(#colorUv)"
           />
           <ReferenceLine
-            y={2000}
+            y={70}
             stroke="#FF732C"
             strokeWidth={2}
             strokeDasharray="41 41"
@@ -110,6 +100,8 @@ export default class Example extends PureComponent {
           />
         </AreaChart>
       </ResponsiveContainer>
-    );
-  }
-}
+    </div>
+  );
+};
+
+export default ChartComponent;

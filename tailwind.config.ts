@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      maxHeight: {
+        chart: "435px", // Add a custom size of 120px
+      },
       screens: {
         xs: "450px",
       },
