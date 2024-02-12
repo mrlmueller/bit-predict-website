@@ -146,17 +146,23 @@ const Dashboard = async () => {
     <div>
       <div className="flex flex-col lg:flex-row">
         <Flex className="order-2 lg:order-1 flex flex-col max-h-chart w-full lg:w-[60%]">
-          <Card fullWidth={true} className="pl-0 mb-8 mt-9 lg:mt-0">
-            <div className="flex justify-between items-center pb-9 mt-2">
-              <h2 className="ml-7 text-xl font-medium">Money Made/Lost</h2>
-              <div className="flex items-center">
+          <Card fullWidth={true} className="mb-8 mt-8 md:mt-0">
+            <div className="flex justify-between items-center pb-3 mt-2">
+              <h2 className="text-xl font-medium ml-4">Money Made/Lost</h2>
+              <TimeFrameDisplay
+                timeFrame="Weekly"
+                className="shrink-0"
+              ></TimeFrameDisplay>
+            </div>
+            <div className="flex items-center pb-9 mt-2">
+              <div className="ml-4 flex space-x-4">
                 <ChartLegend color="purple">Portfolio Value</ChartLegend>
                 <ChartLegend color="orange">Break even</ChartLegend>
-                <TimeFrameDisplay timeFrame="Weekly"></TimeFrameDisplay>
               </div>
             </div>
             <Chart dateFormat="day.month" trades={trades}></Chart>
           </Card>
+
           <div className="flex flex-col md:flex-row md:space-x-4">
             <Card className="flex-1 md:flex-none md:w-1/5">
               <h2 className="text-xl font-medium mb-4">Prediction</h2>
@@ -165,7 +171,7 @@ const Dashboard = async () => {
               ></CurrentPrediction>
             </Card>
 
-            <Card className="flex-1 md:w-2/5 mt-8">
+            <Card className="flex-1 md:w-2/5 mt-8 md:mt-0">
               <PieChartComponent
                 data={returnData}
                 labelValue={(totalGains - totalLosses).toFixed(2) + " $"}
@@ -178,7 +184,7 @@ const Dashboard = async () => {
               />
             </Card>
 
-            <Card className="flex-1 md:w-2/5 mt-8">
+            <Card className="flex-1 md:w-2/5 mt-8 mb-40 md:mt-0 md:mb-0">
               <PieChartComponent
                 data={accuracyData}
                 labelValue={
