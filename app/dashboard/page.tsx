@@ -72,9 +72,41 @@ const Dashboard = async () => {
     }
   });
 
+  const calculateGainsAndLosses = (trades: any[]) => {
+    let totalGains = 0;
+    let totalLosses = 0;
+
+    trades.forEach((trade, index) => {
+      if (index < trades.length - 1) {
+        // Calculate the difference between the current and next trade's before_trade_close
+        const difference =
+          trades[index + 1].before_trade_close - trade.before_trade_close;
+
+        // If the difference is positive, it's a gain, otherwise a loss
+        if (difference > 0) {
+          totalGains += difference; // Accumulate gains
+        } else if (difference < 0) {
+          totalLosses += Math.abs(difference); // Accumulate losses as positive values
+        }
+      }
+    });
+
+    // Optionally, round the totals to a fixed number of decimal places if desired
+    const roundedTotalGains = parseFloat(totalGains.toFixed(2));
+    const roundedTotalLosses = parseFloat(totalLosses.toFixed(2));
+
+    return { totalGains: roundedTotalGains, totalLosses: roundedTotalLosses };
+  };
+
+  // Example usage
+  const { totalGains, totalLosses } = calculateGainsAndLosses(trades);
+
+  console.log("Total gains:", totalGains);
+  console.log("Total losses:", totalLosses);
+
   const data = [
-    { name: "Group A", value: 5 },
-    { name: "Group B", value: 7 },
+    { name: "Losses", value: totalLosses },
+    { name: "Gains", value: totalGains },
   ];
 
   return (
@@ -102,6 +134,7 @@ const Dashboard = async () => {
             {}
             {}
             {}
+
             {}
             {}
             {}
@@ -109,12 +142,12 @@ const Dashboard = async () => {
             <Card className="w-2/5 ml-7">
               <PieChartComponent
                 data={data}
-                labelValue="Return"
+                labelValue={(totalGains - totalLosses).toFixed(2) + " $"}
                 legendTexts={{
                   moneyLost: "Money Lost",
                   accuracy: "Money Gained",
                 }}
-                title="Return Title"
+                title="Return"
                 timeFrame="Weekly" // Assuming you want to set the timeFrame to "Weekly"
               />
             </Card>
