@@ -78,33 +78,31 @@ const Dashboard = async () => {
 
     trades.forEach((trade, index) => {
       if (index < trades.length - 1) {
-        // Calculate the difference between the current and next trade's before_trade_close
         const difference =
           trades[index + 1].before_trade_close - trade.before_trade_close;
 
-        // If the difference is positive, it's a gain, otherwise a loss
         if (difference > 0) {
-          totalGains += difference; // Accumulate gains
+          totalGains += difference;
         } else if (difference < 0) {
-          totalLosses += Math.abs(difference); // Accumulate losses as positive values
+          totalLosses += Math.abs(difference);
         }
       }
     });
 
-    // Optionally, round the totals to a fixed number of decimal places if desired
     const roundedTotalGains = parseFloat(totalGains.toFixed(2));
     const roundedTotalLosses = parseFloat(totalLosses.toFixed(2));
 
     return { totalGains: roundedTotalGains, totalLosses: roundedTotalLosses };
   };
 
-  // Example usage
   const { totalGains, totalLosses } = calculateGainsAndLosses(trades);
 
-  console.log("Total gains:", totalGains);
-  console.log("Total losses:", totalLosses);
+  const returnData = [
+    { name: "Losses", value: totalLosses },
+    { name: "Gains", value: totalGains },
+  ];
 
-  const data = [
+  const accuracyData = [
     { name: "Losses", value: totalLosses },
     { name: "Gains", value: totalGains },
   ];
@@ -112,7 +110,7 @@ const Dashboard = async () => {
   return (
     <div>
       <div className="flex flex-col lg:flex-row">
-        <Flex className="flex flex-col max-h-chart w-full lg:w-[60%]">
+        <Flex className="order-2 lg:order-1 flex flex-col max-h-chart w-full lg:w-[60%]">
           <Card fullWidth={true} className="pl-0 mb-8">
             <div className="flex justify-between items-center pb-9 mt-2">
               <h2 className="ml-7 text-xl font-medium">Money Made/Lost</h2>
@@ -131,17 +129,10 @@ const Dashboard = async () => {
                 currentPred={parseInt(currentPred!.pred.toFixed(0))}
               ></CurrentPrediction>
             </Card>
-            {}
-            {}
-            {}
 
-            {}
-            {}
-            {}
-            {}
             <Card className="w-2/5 ml-7">
               <PieChartComponent
-                data={data}
+                data={returnData}
                 labelValue={(totalGains - totalLosses).toFixed(2) + " $"}
                 legendTexts={{
                   moneyLost: "Money Lost",
@@ -151,29 +142,24 @@ const Dashboard = async () => {
                 timeFrame="Weekly" // Assuming you want to set the timeFrame to "Weekly"
               />
             </Card>
-            {}
-            {}
-            {}
-            {}
-            {}
-
             <Card className="w-2/5 ml-7">
-              <h2 className="text-xl font-medium mb-4">Accuracy</h2>
+              <PieChartComponent
+                data={accuracyData}
+                labelValue={(totalGains - totalLosses).toFixed(2) + " $"}
+                legendTexts={{
+                  moneyLost: "Wrong Predictions",
+                  accuracy: "Right Predictions",
+                }}
+                title="Return"
+                timeFrame="Weekly" // Assuming you want to set the timeFrame to "Weekly"
+              />
             </Card>
-            {}
-            {}
-            {}
-            {}
-            {}
-            {}
-            {}
-            {}
           </Flex>
         </Flex>
         <Grid
+          className="order-1 lg:order-2 mt-8 lg:mt-0 lg:ml-8 w-full lg:w-2/5"
           columns="1"
           gap="6"
-          className="mt-8 lg:mt-0 lg:ml-8 w-full lg:w-2/5"
         >
           <Card>
             <InvestmentCard
