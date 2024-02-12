@@ -1,21 +1,17 @@
 import prisma from "@/prisma/client";
-import { Button, Flex, Grid, Table } from "@radix-ui/themes";
+import { Flex, Grid, Table } from "@radix-ui/themes";
 import { MdOutlineAttachMoney } from "react-icons/md";
 import { PiCurrencyBtc } from "react-icons/pi";
 import Card from "../components/Card";
 import Chart from "../components/Chart";
-import FormattedDate from "../components/FormatDate";
-import InvestmentCard from "./InvestmentCard";
-import UpDownCard from "./upDownCard";
-import ChartLegend from "./ChartLegend";
 import CurrentPrediction from "../components/CurrentPrediction";
-import TimeFrameDisplay from "./TimeFrameDisplay";
-import dynamic from "next/dynamic";
+import FormattedDate from "../components/FormatDate";
 import PieChartComponent from "../components/PieChart";
+import ChartLegend from "./ChartLegend";
+import InvestmentCard from "./InvestmentCard";
+import TimeFrameDisplay from "./TimeFrameDisplay";
+import UpDownCard from "./upDownCard";
 
-const PieChart = dynamic(() => import("../components/PieChart"), {
-  ssr: false,
-});
 // Change how caching works
 const Dashboard = async () => {
   const tradeData = await prisma.tradingdata.findFirst({
@@ -102,9 +98,48 @@ const Dashboard = async () => {
     { name: "Gains", value: totalGains },
   ];
 
+  type PredictionData = {
+    pred?: number | null;
+  };
+
+  type ActualData = {
+    higher_lower?: number | null;
+  };
+
+  const countMatchesAndMismatches = (
+    preds: PredictionData[],
+    actualData: ActualData[]
+  ) => {
+    let matches = 0;
+    let mismatches = 0;
+
+    const minLength = Math.min(preds.length, actualData.length);
+
+    for (let i = 0; i < minLength; i++) {
+      const pred = preds[i]?.pred;
+      const actual = actualData[i]?.higher_lower;
+
+      const predBinary =
+        typeof pred === "number" ? (pred >= 0.5 ? 1 : 0) : null;
+
+      if (predBinary !== null && typeof actual === "number") {
+        if (predBinary === actual) {
+          matches++;
+        } else {
+          mismatches++;
+        }
+      }
+    }
+
+    return { matches, mismatches };
+  };
+
+  // Example usage
+  const { matches, mismatches } = countMatchesAndMismatches(preds, actualData);
+
   const accuracyData = [
-    { name: "Losses", value: totalLosses },
-    { name: "Gains", value: totalGains },
+    { name: "Losses", value: mismatches },
+    { name: "Gains", value: matches },
   ];
 
   return (
@@ -145,12 +180,14 @@ const Dashboard = async () => {
             <Card className="w-2/5 ml-7">
               <PieChartComponent
                 data={accuracyData}
-                labelValue={(totalGains - totalLosses).toFixed(2) + " $"}
+                labelValue={
+                  ((matches / actualData.length) * 100).toFixed(1) + " %"
+                }
                 legendTexts={{
                   moneyLost: "Wrong Predictions",
                   accuracy: "Right Predictions",
                 }}
-                title="Return"
+                title="Predictions"
                 timeFrame="Weekly" // Assuming you want to set the timeFrame to "Weekly"
               />
             </Card>
