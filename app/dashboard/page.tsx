@@ -143,7 +143,7 @@ const Dashboard = async () => {
   ];
 
   return (
-    <div>
+    <div className="max-w-[2000px] mx-auto">
       <div className="flex flex-col lg:flex-row">
         <Flex className="order-2 lg:order-1 flex flex-col max-h-chart w-full lg:w-[60%]">
           <Card fullWidth={true} className="mb-8 mt-8 md:mt-0">
