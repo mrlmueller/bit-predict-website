@@ -146,7 +146,7 @@ const Dashboard = async () => {
     <div>
       <div className="flex flex-col lg:flex-row">
         <Flex className="order-2 lg:order-1 flex flex-col max-h-chart w-full lg:w-[60%]">
-          <Card fullWidth={true} className="pl-0 mb-8">
+          <Card fullWidth={true} className="pl-0 mb-8 mt-9 lg:mt-0">
             <div className="flex justify-between items-center pb-9 mt-2">
               <h2 className="ml-7 text-xl font-medium">Money Made/Lost</h2>
               <div className="flex items-center">
@@ -157,15 +157,15 @@ const Dashboard = async () => {
             </div>
             <Chart dateFormat="day.month" trades={trades}></Chart>
           </Card>
-          <Flex>
-            <Card className="w-1/5 ">
-              <h2 className="text-xl font-medium mb-4">Prediciton</h2>
+          <div className="flex flex-col md:flex-row md:space-x-4">
+            <Card className="flex-1 md:flex-none md:w-1/5">
+              <h2 className="text-xl font-medium mb-4">Prediction</h2>
               <CurrentPrediction
                 currentPred={parseInt(currentPred!.pred.toFixed(0))}
               ></CurrentPrediction>
             </Card>
 
-            <Card className="w-2/5 ml-7">
+            <Card className="flex-1 md:w-2/5 mt-8">
               <PieChartComponent
                 data={returnData}
                 labelValue={(totalGains - totalLosses).toFixed(2) + " $"}
@@ -174,10 +174,11 @@ const Dashboard = async () => {
                   accuracy: "Money Gained",
                 }}
                 title="Return"
-                timeFrame="Weekly" // Assuming you want to set the timeFrame to "Weekly"
+                timeFrame="Weekly"
               />
             </Card>
-            <Card className="w-2/5 ml-7">
+
+            <Card className="flex-1 md:w-2/5 mt-8">
               <PieChartComponent
                 data={accuracyData}
                 labelValue={
@@ -188,10 +189,10 @@ const Dashboard = async () => {
                   accuracy: "Right Predictions",
                 }}
                 title="Predictions"
-                timeFrame="Weekly" // Assuming you want to set the timeFrame to "Weekly"
+                timeFrame="Weekly"
               />
             </Card>
-          </Flex>
+          </div>
         </Flex>
         <Grid
           className="order-1 lg:order-2 mt-8 lg:mt-0 lg:ml-8 w-full lg:w-2/5"
