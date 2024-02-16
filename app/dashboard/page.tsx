@@ -5,14 +5,14 @@ import { useEffect, useState } from "react";
 import { MdOutlineAttachMoney } from "react-icons/md";
 import { PiCurrencyBtc } from "react-icons/pi";
 import Card from "../components/Card";
-import Chart from "../components/Chart";
-import CurrentPrediction from "../components/CurrentPrediction";
+import Chart from "./_components/Chart";
+import CurrentPrediction from "./_components/CurrentPrediction";
 import FormattedDate from "../components/FormatDate";
-import PieChartComponent from "../components/PieChart";
-import ChartLegend from "./ChartLegend";
-import InvestmentCard from "./InvestmentCard";
-import TimeFrameDisplay from "./TimeFrameDisplay";
-import UpDownCard from "./upDownCard";
+import PieChartComponent from "./_components/PieChart";
+import ChartLegend from "./_components/ChartLegend";
+import InvestmentCard from "./_components/InvestmentCard";
+import TimeFrameDisplay from "./_components/TimeFrameDisplay";
+import UpDownCard from "./_components/upDownCard";
 
 const Dashboard = () => {
   const [amount, setAmount] = useState<number>(7); // Adjust based on your actual needs
@@ -180,6 +180,7 @@ const Dashboard = () => {
       <Button onClick={() => setAmount(4)}>4 Days</Button>
       <Button onClick={() => setAmount(8)}>8 Days</Button>
       <Button onClick={() => setAmount(16)}>14 Days</Button>
+
       <div className="flex flex-col lg:flex-row">
         <Flex className="order-2 lg:order-1 flex flex-col max-h-chart w-full lg:w-[60%]">
           <Card fullWidth={true} className="mb-8 mt-8 pl-0 md:mt-0 md:pl-4">

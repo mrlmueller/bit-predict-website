@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Label } from "recharts";
-import TimeFrameDisplay from "../dashboard/TimeFrameDisplay";
-import ChartLegend from "../dashboard/ChartLegend";
+import TimeFrameDisplay from "./TimeFrameDisplay";
+import ChartLegend from "./ChartLegend";
 import { BsQuestionCircleFill } from "react-icons/bs";
 
 interface PieChartData {
