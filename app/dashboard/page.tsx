@@ -13,6 +13,8 @@ import ChartLegend from "./_components/ChartLegend";
 import InvestmentCard from "./_components/InvestmentCard";
 import TimeFrameDisplay from "./_components/TimeFrameDisplay";
 import UpDownCard from "./_components/upDownCard";
+import MoneyMadeLostContent from "./_components/MoneyMadeLostContent";
+import TradesTable from "./_components/TradesTable";
 
 const Dashboard = () => {
   const [amount, setAmount] = useState<number>(7); // Adjust based on your actual needs
@@ -74,8 +76,6 @@ const Dashboard = () => {
 
     fetchData();
   }, [amount]);
-
-  console.log(trades);
 
   const results = trades.map((trade, index) => {
     if (index < trades.length - 1) {
@@ -186,24 +186,8 @@ const Dashboard = () => {
       <div className="flex flex-col lg:flex-row">
         <Flex className="order-2 lg:order-1 flex flex-col max-h-chart w-full lg:w-[60%]">
           <Card fullWidth={true} className="mb-8 mt-8 pl-0 lg:mt-0 md:pl-4">
-            <div className="flex justify-between items-center pb-3 mt-2">
-              <h2 className="text-xl font-medium ml-6 md:ml-4">
-                Money Made/Lost
-              </h2>
-              <TimeFrameDisplay
-                timeFrame="Weekly"
-                className="shrink-0"
-              ></TimeFrameDisplay>
-            </div>
-            <div className="flex items-center pb-9 mt-2">
-              <div className="ml-6 flex space-x-4 md:ml-4">
-                <ChartLegend color="purple">Portfolio Value</ChartLegend>
-                <ChartLegend color="orange">Break even</ChartLegend>
-              </div>
-            </div>
-            <Chart dateFormat="day.month" trades={trades}></Chart>
+            <MoneyMadeLostContent trades={trades}></MoneyMadeLostContent>
           </Card>
-
           <div className="flex flex-col md:flex-row md:space-x-4">
             <Card className="flex-1 md:flex-none md:w-1/5">
               <h2 className="text-xl font-medium mb-4">Prediction</h2>
@@ -256,43 +240,12 @@ const Dashboard = () => {
             </InvestmentCard>
           </Card>
           <Card>
-            <h2 className="text-xl mb-4 font-medium">Trades</h2>
-            <Table.Root variant="ghost">
-              <Table.Header>
-                <Table.Row>
-                  <Table.ColumnHeaderCell className="font-semibold  hidden xs:block">
-                    Date
-                  </Table.ColumnHeaderCell>
-                  <Table.ColumnHeaderCell className="font-semibold ">
-                    Prediction
-                  </Table.ColumnHeaderCell>
-                  <Table.ColumnHeaderCell className="font-semibold ">
-                    Actual
-                  </Table.ColumnHeaderCell>
-                  <Table.ColumnHeaderCell className="font-semibold ">
-                    Result
-                  </Table.ColumnHeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {trades.map((trade, index) => (
-                  <Table.Row key={trade.id}>
-                    <Table.Cell className="hidden xs:block">
-                      <FormattedDate>{trade.timestamp}</FormattedDate>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <UpDownCard prediction={preds[index]?.pred} />
-                    </Table.Cell>
-                    <Table.Cell>
-                      <UpDownCard actual={actualData[index]?.higher_lower} />
-                    </Table.Cell>
-                    <Table.Cell>
-                      {results[index] !== null ? `${results[index]} $` : ""}
-                    </Table.Cell>
-                  </Table.Row>
-                ))}
-              </Table.Body>
-            </Table.Root>
+            <TradesTable
+              trades={trades}
+              preds={preds}
+              actualData={actualData}
+              results={results}
+            ></TradesTable>
           </Card>
           <Card>
             <InvestmentCard

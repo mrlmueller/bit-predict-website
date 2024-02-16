@@ -38,6 +38,11 @@ export async function POST(request: NextRequest) {
     orderBy: {
       id: "desc",
     },
+    select: {
+      id: true,
+      timestamp: true,
+      higher_lower: true,
+    },
   });
 
   return NextResponse.json([tradingdata, prediction, scrapeddata], {
