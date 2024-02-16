@@ -75,6 +75,8 @@ const Dashboard = () => {
     fetchData();
   }, [amount]);
 
+  console.log(trades);
+
   const results = trades.map((trade, index) => {
     if (index < trades.length - 1) {
       const directionChanged = trades[index + 1].after_trade_close !== null;
@@ -183,7 +185,7 @@ const Dashboard = () => {
 
       <div className="flex flex-col lg:flex-row">
         <Flex className="order-2 lg:order-1 flex flex-col max-h-chart w-full lg:w-[60%]">
-          <Card fullWidth={true} className="mb-8 mt-8 pl-0 md:mt-0 md:pl-4">
+          <Card fullWidth={true} className="mb-8 mt-8 pl-0 lg:mt-0 md:pl-4">
             <div className="flex justify-between items-center pb-3 mt-2">
               <h2 className="text-xl font-medium ml-6 md:ml-4">
                 Money Made/Lost

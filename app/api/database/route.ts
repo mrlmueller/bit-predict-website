@@ -17,6 +17,13 @@ export async function POST(request: NextRequest) {
     orderBy: {
       id: "desc",
     },
+    select: {
+      id: true,
+      before_trade_close: true,
+      after_trade_close: true,
+      after_trade_open: true,
+      timestamp: true,
+    },
   });
 
   const prediction = await prisma.prediction.findMany({

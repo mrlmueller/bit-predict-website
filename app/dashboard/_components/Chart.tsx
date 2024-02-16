@@ -1,5 +1,4 @@
 "use client";
-import { PureComponent } from "react";
 import {
   Area,
   AreaChart,
