@@ -8,7 +8,7 @@ interface Props {
 const TimeFrameComponent = ({ setAmount, setTimeFrame }: Props) => {
   const [selectedTimeFrame, setSelectedTimeFrame] = useState("Weekly");
   const timeFrames = ["Weekly", "Monthly", "Max"];
-  const amount = [7, 10, 16];
+  const amount = [7, 10, 17];
 
   return (
     <div className="flex justify-between items-center w-full">

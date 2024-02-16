@@ -1,21 +1,16 @@
 "use client";
 import { prediction, scrapeddata, tradingdata } from "@prisma/client";
-import { Button, Flex, Grid, Table } from "@radix-ui/themes";
+import { Flex, Grid } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 import { MdOutlineAttachMoney } from "react-icons/md";
 import { PiCurrencyBtc } from "react-icons/pi";
 import Card from "../components/Card";
-import Chart from "./_components/Chart";
 import CurrentPrediction from "./_components/CurrentPrediction";
-import FormattedDate from "../components/FormatDate";
-import PieChartComponent from "./_components/PieChart";
-import ChartLegend from "./_components/ChartLegend";
 import InvestmentCard from "./_components/InvestmentCard";
-import TimeFrameDisplay from "./_components/TimeFrameDisplay";
-import UpDownCard from "./_components/upDownCard";
 import MoneyMadeLostContent from "./_components/MoneyMadeLostContent";
-import TradesTable from "./_components/TradesTable";
+import PieChartComponent from "./_components/PieChart";
 import TimeframeSelector from "./_components/TimeframeSelector";
+import TradesTable from "./_components/TradesTable";
 
 const Dashboard = () => {
   const [amount, setAmount] = useState<number>(7); // Adjust based on your actual needs
@@ -181,7 +176,7 @@ const Dashboard = () => {
 
   return (
     <div className="max-w-[2000px] mx-auto">
-      <Card className="flex max-w-80 mb-0 px-[1rem] lg:mb-5">
+      <Card className="flex max-w-full mb-0 px-[1rem] lg:mb-5 md:max-w-80">
         <TimeframeSelector
           setAmount={setAmount}
           setTimeFrame={setTimeFrame}
