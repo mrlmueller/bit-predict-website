@@ -1,5 +1,9 @@
 import Image from "next/image";
 
 export default function Home() {
-  return <h1>Hello World</h1>;
+  return (
+    <div className="max-w-[2000px] mx-auto">
+      <h1>Hello World</h1>
+    </div>
+  );
 }

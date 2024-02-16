@@ -170,12 +170,16 @@ const Dashboard = () => {
     { name: "Losses", value: mismatches },
     { name: "Gains", value: matches },
   ];
+
   if (isLoading) {
     return <div>Loading...</div>; // Or any other loading indicator you prefer
   }
 
   return (
     <div className="max-w-[2000px] mx-auto">
+      <Button onClick={() => setAmount(4)}>4 Days</Button>
+      <Button onClick={() => setAmount(8)}>8 Days</Button>
+      <Button onClick={() => setAmount(16)}>14 Days</Button>
       <div className="flex flex-col lg:flex-row">
         <Flex className="order-2 lg:order-1 flex flex-col max-h-chart w-full lg:w-[60%]">
           <Card fullWidth={true} className="mb-8 mt-8 pl-0 md:mt-0 md:pl-4">

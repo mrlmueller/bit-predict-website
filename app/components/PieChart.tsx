@@ -19,7 +19,7 @@ interface PieChartComponentProps {
   timeFrame: string; // Time frame for TimeFrameDisplay
 }
 
-const COLORS = ["#A668D8", "#FF8A4F"];
+const COLORS = ["#FF8A4F", "#A668D8"];
 
 const PieChartComponent: React.FC<PieChartComponentProps> = ({
   data,
