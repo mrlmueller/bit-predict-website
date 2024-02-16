@@ -15,6 +15,7 @@ import TimeFrameDisplay from "./_components/TimeFrameDisplay";
 import UpDownCard from "./_components/upDownCard";
 import MoneyMadeLostContent from "./_components/MoneyMadeLostContent";
 import TradesTable from "./_components/TradesTable";
+import TimeframeSelector from "./_components/TimeframeSelector";
 
 const Dashboard = () => {
   const [amount, setAmount] = useState<number>(7); // Adjust based on your actual needs
@@ -24,6 +25,7 @@ const Dashboard = () => {
   const [actualData, setActualData] = useState<scrapeddata[]>([]);
   const [currentPred, setCurrentPred] = useState<prediction | null>(null);
   const [result, setResult] = useState<number | null>(null);
+  const [timeFrame, setTimeFrame] = useState<string>("Weekly");
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -179,14 +181,19 @@ const Dashboard = () => {
 
   return (
     <div className="max-w-[2000px] mx-auto">
-      <Button onClick={() => setAmount(4)}>4 Days</Button>
-      <Button onClick={() => setAmount(8)}>8 Days</Button>
-      <Button onClick={() => setAmount(16)}>14 Days</Button>
-
+      <Card className="flex max-w-80 mb-0 px-[1rem] lg:mb-5">
+        <TimeframeSelector
+          setAmount={setAmount}
+          setTimeFrame={setTimeFrame}
+        ></TimeframeSelector>
+      </Card>
       <div className="flex flex-col lg:flex-row">
         <Flex className="order-2 lg:order-1 flex flex-col max-h-chart w-full lg:w-[60%]">
           <Card fullWidth={true} className="mb-8 mt-8 pl-0 lg:mt-0 md:pl-4">
-            <MoneyMadeLostContent trades={trades}></MoneyMadeLostContent>
+            <MoneyMadeLostContent
+              trades={trades}
+              timeFrame={timeFrame}
+            ></MoneyMadeLostContent>
           </Card>
           <div className="flex flex-col md:flex-row md:space-x-4">
             <Card className="flex-1 md:flex-none md:w-1/5">
@@ -205,7 +212,7 @@ const Dashboard = () => {
                   accuracy: "Money Gained",
                 }}
                 title="Return"
-                timeFrame="Weekly"
+                timeFrame={timeFrame}
               />
             </Card>
 
@@ -220,7 +227,7 @@ const Dashboard = () => {
                   accuracy: "Right Predictions",
                 }}
                 title="Predictions"
-                timeFrame="Weekly"
+                timeFrame={timeFrame}
               />
             </Card>
           </div>
