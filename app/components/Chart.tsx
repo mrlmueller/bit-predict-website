@@ -41,6 +41,10 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 }) => {
   // Helper function to format date based on prop
   const formatDate = (date: Date): string => {
+    if (!(date instanceof Date) || isNaN(date.getTime())) {
+      // Check if date is a Date object and is valid
+      return "Invalid Date"; // Placeholder for handling invalid dates
+    }
     const day = date.getDate();
     const month = date.getMonth() + 1; // JavaScript months are 0-indexed
     if (dateFormat === "day.month") {
@@ -52,7 +56,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 
   // Transform trades to chart data format
   const data = trades.map((trade) => ({
-    name: formatDate(trade.timestamp), // Format date based on prop
+    name: formatDate(new Date(trade.timestamp)), // Convert string to Date
     value: trade.before_trade_close?.toFixed(2) || 0,
   }));
 

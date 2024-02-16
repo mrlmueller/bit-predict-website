@@ -1,5 +1,7 @@
-import prisma from "@/prisma/client";
-import { Flex, Grid, Table } from "@radix-ui/themes";
+"use client";
+import { prediction, scrapeddata, tradingdata } from "@prisma/client";
+import { Button, Flex, Grid, Table } from "@radix-ui/themes";
+import { useEffect, useState } from "react";
 import { MdOutlineAttachMoney } from "react-icons/md";
 import { PiCurrencyBtc } from "react-icons/pi";
 import Card from "../components/Card";
@@ -12,39 +14,66 @@ import InvestmentCard from "./InvestmentCard";
 import TimeFrameDisplay from "./TimeFrameDisplay";
 import UpDownCard from "./upDownCard";
 
-// Change how caching works
-const Dashboard = async () => {
-  const tradeData = await prisma.tradingdata.findFirst({
-    orderBy: {
-      id: "desc",
-    },
-  });
-  const result = tradeData!.after_trade_open ?? tradeData!.before_trade_close;
+const Dashboard = () => {
+  const [amount, setAmount] = useState<number>(7); // Adjust based on your actual needs
 
-  const trades = await prisma.tradingdata.findMany();
+  const [trades, setTrades] = useState<tradingdata[]>([]);
+  const [preds, setPreds] = useState<prediction[]>([]);
+  const [actualData, setActualData] = useState<scrapeddata[]>([]);
+  const [currentPred, setCurrentPred] = useState<prediction | null>(null);
+  const [result, setResult] = useState<number | null>(null);
 
-  const preds = await prisma.prediction.findMany({
-    take: trades.length,
-    orderBy: {
-      id: "desc",
-    },
-  });
+  const [isLoading, setIsLoading] = useState(true);
 
-  const currentPred = await prisma.prediction.findFirst({
-    orderBy: {
-      id: "desc",
-    },
-  });
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch("/api/database", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ amount }),
+      });
 
-  const actualData = await prisma.scrapeddata.findMany({
-    take: trades.length - 1,
-    orderBy: {
-      id: "desc",
-    },
-  });
+      if (response.ok) {
+        const [tradingDataResponse, predictionResponse, scrapedDataResponse] =
+          await response.json();
 
-  preds.reverse();
-  actualData.reverse();
+        // Assuming your original logic required reversing the data arrays
+        // Reverse them only if it aligns with your original data handling logic
+        const reversedTradingData = tradingDataResponse.reverse();
+        const reversedPrediction = predictionResponse.reverse();
+        const reversedScrapedData =
+          scrapedDataResponse.length > 1
+            ? scrapedDataResponse.reverse()
+            : scrapedDataResponse;
+
+        setTrades(reversedTradingData);
+        setPreds(reversedPrediction);
+        setActualData(reversedScrapedData);
+
+        // Set currentPred based on the reversedPrediction which aligns with the initial latest fetch logic
+        setCurrentPred(
+          reversedPrediction[reversedPrediction.length - 1] ?? null
+        );
+
+        // Handle result calculation similar to your initial logic
+        const initialTrade =
+          tradingDataResponse[tradingDataResponse.length - 1];
+        setResult(
+          initialTrade
+            ? initialTrade.after_trade_open ?? initialTrade.before_trade_close
+            : null
+        );
+      } else {
+        // Handle fetch error
+        console.error("Failed to fetch data from API");
+      }
+      setIsLoading(false);
+    };
+
+    fetchData();
+  }, [amount]);
 
   const results = trades.map((trade, index) => {
     if (index < trades.length - 1) {
@@ -141,6 +170,9 @@ const Dashboard = async () => {
     { name: "Losses", value: mismatches },
     { name: "Gains", value: matches },
   ];
+  if (isLoading) {
+    return <div>Loading...</div>; // Or any other loading indicator you prefer
+  }
 
   return (
     <div className="max-w-[2000px] mx-auto">
