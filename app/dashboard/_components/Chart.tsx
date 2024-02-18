@@ -8,6 +8,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import CustomToolTip from "./CustomToolTip";
 
 const formatYAxis = (tickItem: number): string => {
   if (tickItem >= 1000) {
@@ -55,7 +56,8 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 
   // Transform trades to chart data format
   const data = trades.map((trade) => ({
-    name: formatDate(new Date(trade.timestamp)), // Convert string to Date
+    name: formatDate(new Date(trade.timestamp)), // For the X-axis
+    originalDate: trade.timestamp, // For the tooltip
     value: trade.before_trade_close?.toFixed(2) || 0,
   }));
 
@@ -97,7 +99,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
             tickMargin={14} // Increase tick margin to push axis description away
             tick={{ fontSize: 14 }} // Decrease font size to make text smaller
           />
-          <Tooltip cursor={false} />
+          <Tooltip cursor={false} content={<CustomToolTip />} />
           <Area
             type="monotone"
             dataKey="value"

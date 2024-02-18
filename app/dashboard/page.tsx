@@ -83,7 +83,7 @@ const Dashboard = () => {
           setIsLimitedDataPopupOpen(true);
           setTimeout(() => {
             setIsLimitedDataPopupOpen(false);
-          }, 1400);
+          }, 2000);
         }
       } else {
         console.error("Failed to fetch data from API");
