@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 interface Props {
   setAmount: (amount: number) => void;
@@ -8,7 +8,7 @@ interface Props {
 const TimeFrameComponent = ({ setAmount, setTimeFrame }: Props) => {
   const [selectedTimeFrame, setSelectedTimeFrame] = useState("Weekly");
   const timeFrames = ["Weekly", "Monthly", "Max"];
-  const amount = [7, 10, 17];
+  const amount = [7, 30, 20000];
 
   return (
     <div className="flex justify-between items-center w-full">

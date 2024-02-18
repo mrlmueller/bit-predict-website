@@ -3,20 +3,22 @@ import prisma from "@/prisma/client";
 import { z } from "zod";
 
 const issueSchema = z.object({
-  amount: z.number().max(100).min(2),
+  amount: z.number().min(2),
 });
 
 export async function POST(request: NextRequest) {
-  const startTime = new Date(); // Start time measurement
-
   const body = await request.json();
   const validation = issueSchema.safeParse(body);
   if (!validation.success)
     return NextResponse.json(validation.error.format(), { status: 400 });
 
+  // Check the total available tradingdata records
+  const totalAvailable = await prisma.tradingdata.count();
+  const adjustedAmount = Math.min(body.amount, totalAvailable);
+
   const [tradingdata, prediction, scrapeddata] = await Promise.all([
     prisma.tradingdata.findMany({
-      take: parseInt(body.amount),
+      take: adjustedAmount,
       orderBy: {
         id: "desc",
       },
@@ -29,13 +31,13 @@ export async function POST(request: NextRequest) {
       },
     }),
     prisma.prediction.findMany({
-      take: parseInt(body.amount),
+      take: adjustedAmount,
       orderBy: {
         id: "desc",
       },
     }),
     prisma.scrapeddata.findMany({
-      take: parseInt(body.amount) - 1,
+      take: adjustedAmount - 1,
       orderBy: {
         id: "desc",
       },
@@ -47,12 +49,13 @@ export async function POST(request: NextRequest) {
     }),
   ]);
 
-  const endTime = new Date(); // End time measurement
-  const executionTime = endTime.getTime() - startTime.getTime(); // Calculate execution time
+  // Include a flag or additional data to indicate if the data was limited
+  const isLimitedData: boolean = adjustedAmount < body.amount;
 
-  //console.log("Execution time: " + executionTime + "ms");
-
-  return NextResponse.json([tradingdata, prediction, scrapeddata], {
-    status: 201,
-  });
+  return NextResponse.json(
+    { tradingdata, prediction, scrapeddata, isLimitedData, totalAvailable },
+    {
+      status: 201,
+    }
+  );
 }
