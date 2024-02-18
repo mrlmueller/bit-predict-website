@@ -11,6 +11,10 @@ import MoneyMadeLostContent from "./_components/MoneyMadeLostContent";
 import PieChartComponent from "./_components/PieChart";
 import TimeframeSelector from "./_components/TimeframeSelector";
 import TradesTable from "./_components/TradesTable";
+import {
+  countMatchesAndMismatches,
+  calculateGainsAndLosses,
+} from "../utils/dashboardCalculations";
 
 const Dashboard = () => {
   const [amount, setAmount] = useState<number>(7); // Adjust based on your actual needs
@@ -96,82 +100,22 @@ const Dashboard = () => {
     }
   });
 
-  const calculateGainsAndLosses = (trades: any[]) => {
-    let totalGains = 0;
-    let totalLosses = 0;
-
-    trades.forEach((trade, index) => {
-      if (index < trades.length - 1) {
-        const difference =
-          trades[index + 1].before_trade_close - trade.before_trade_close;
-
-        if (difference > 0) {
-          totalGains += difference;
-        } else if (difference < 0) {
-          totalLosses += Math.abs(difference);
-        }
-      }
-    });
-
-    const roundedTotalGains = parseFloat(totalGains.toFixed(2));
-    const roundedTotalLosses = parseFloat(totalLosses.toFixed(2));
-
-    return { totalGains: roundedTotalGains, totalLosses: roundedTotalLosses };
-  };
-
+  // Calculate total gains and losses and create the obj for the PieChartComponent
   const { totalGains, totalLosses } = calculateGainsAndLosses(trades);
-
   const returnData = [
     { name: "Losses", value: totalLosses },
     { name: "Gains", value: totalGains },
   ];
 
-  type PredictionData = {
-    pred?: number | null;
-  };
-
-  type ActualData = {
-    higher_lower?: number | null;
-  };
-
-  const countMatchesAndMismatches = (
-    preds: PredictionData[],
-    actualData: ActualData[]
-  ) => {
-    let matches = 0;
-    let mismatches = 0;
-
-    const minLength = Math.min(preds.length, actualData.length);
-
-    for (let i = 0; i < minLength; i++) {
-      const pred = preds[i]?.pred;
-      const actual = actualData[i]?.higher_lower;
-
-      const predBinary =
-        typeof pred === "number" ? (pred >= 0.5 ? 1 : 0) : null;
-
-      if (predBinary !== null && typeof actual === "number") {
-        if (predBinary === actual) {
-          matches++;
-        } else {
-          mismatches++;
-        }
-      }
-    }
-
-    return { matches, mismatches };
-  };
-
-  // Example usage
+  // Count matches and mismatches and create the obj for the PieChartComponent
   const { matches, mismatches } = countMatchesAndMismatches(preds, actualData);
-
   const accuracyData = [
     { name: "Losses", value: mismatches },
     { name: "Gains", value: matches },
   ];
 
   if (isLoading) {
-    return <div>Loading...</div>; // Or any other loading indicator you prefer
+    return <div>Jetzt warte halt mal kurz du dummkopf...</div>;
   }
 
   return (
