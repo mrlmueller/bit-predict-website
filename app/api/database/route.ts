@@ -11,6 +11,19 @@ export async function POST(request: NextRequest) {
   const validation = issueSchema.safeParse(body);
   if (!validation.success)
     return NextResponse.json(validation.error.format(), { status: 400 });
+  }
+
+  const cacheKey = generateCacheKey(body.amount);
+  const now = new Date();
+
+  // Check cache first
+  if (
+    cacheStore[cacheKey] &&
+    now.getTime() - cacheStore[cacheKey].timestamp.getTime() < 86400000
+  ) {
+    // 86400000ms = 24 hours
+    return NextResponse.json(cacheStore[cacheKey].data, { status: 200 });
+  }
 
   // Check the total available tradingdata records
   const totalAvailable = await prisma.tradingdata.count();
