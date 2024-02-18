@@ -22,6 +22,9 @@ const TradesTable = ({ trades, preds, actualData, results }: Props) => {
             <Table.ColumnHeaderCell className="font-semibold hidden xs:block">
               Date
             </Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell className="font-semibold xs:hidden">
+              Date
+            </Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell className="font-semibold ">
               Prediction
             </Table.ColumnHeaderCell>
@@ -38,6 +41,11 @@ const TradesTable = ({ trades, preds, actualData, results }: Props) => {
             <Table.Row key={trade.id}>
               <Table.Cell className="hidden xs:block">
                 <FormattedDate>{trade.timestamp}</FormattedDate>
+              </Table.Cell>
+              <Table.Cell className="xs:hidden">
+                <FormattedDate formatType="monthDay">
+                  {trade.timestamp}
+                </FormattedDate>
               </Table.Cell>
               <Table.Cell>
                 <UpDownCard prediction={preds[index]?.pred} />
