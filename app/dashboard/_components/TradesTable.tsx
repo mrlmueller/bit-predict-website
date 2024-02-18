@@ -19,7 +19,7 @@ const TradesTable = ({ trades, preds, actualData, results }: Props) => {
       <Table.Root variant="ghost">
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeaderCell className="font-semibold  hidden xs:block">
+            <Table.ColumnHeaderCell className="font-semibold hidden xs:block">
               Date
             </Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell className="font-semibold ">

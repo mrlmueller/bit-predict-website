@@ -190,41 +190,44 @@ const Dashboard = () => {
               timeFrame={timeFrame}
             ></MoneyMadeLostContent>
           </Card>
-          <div className="flex flex-col md:flex-row md:space-x-4">
-            <Card className="flex-1 md:flex-none md:w-1/5">
+
+          <div className="flex flex-col md:flex-col 2xl:flex-row 2xl:w-full">
+            <Card className="flex-1 md:flex-none md:w-full md:max-h-28 2xl:w-1/5">
               <h2 className="text-xl font-medium mb-4">Prediction</h2>
               <CurrentPrediction
                 currentPred={parseInt(currentPred!.pred.toFixed(0))}
               ></CurrentPrediction>
             </Card>
 
-            <Card className="flex-1 md:w-2/5 mt-8 md:mt-0">
-              <PieChartComponent
-                data={returnData}
-                labelValue={(totalGains - totalLosses).toFixed(2) + " $"}
-                legendTexts={{
-                  moneyLost: "Money Lost",
-                  accuracy: "Money Gained",
-                }}
-                title="Return"
-                timeFrame={timeFrame}
-              />
-            </Card>
+            <div className="flex flex-col md:flex-row md:mt-7 md:mb-11 md:ml-4 md:justify-between 2xl:w-full 2xl:mt-0 2xl:ml-7">
+              <Card className="md:ml-[-12px] md:w-[49%] mt-8 md:mt-0  2xl:ml-0 2xl:w-[48%]">
+                <PieChartComponent
+                  data={returnData}
+                  labelValue={(totalGains - totalLosses).toFixed(2) + " $"}
+                  legendTexts={{
+                    moneyLost: "Money Lost",
+                    accuracy: "Money Gained",
+                  }}
+                  title="Return"
+                  timeFrame={timeFrame}
+                />
+              </Card>
 
-            <Card className="flex-1 md:w-2/5 mt-8 mb-40 md:mt-0 md:mb-0">
-              <PieChartComponent
-                data={accuracyData}
-                labelValue={
-                  ((matches / actualData.length) * 100).toFixed(1) + " %"
-                }
-                legendTexts={{
-                  moneyLost: "Wrong Predictions",
-                  accuracy: "Right Predictions",
-                }}
-                title="Predictions"
-                timeFrame={timeFrame}
-              />
-            </Card>
+              <Card className="md:w-[49%] mt-8 mb-40 md:mt-0 md:mb-0 2xl:w-[48%]">
+                <PieChartComponent
+                  data={accuracyData}
+                  labelValue={
+                    ((matches / actualData.length) * 100).toFixed(1) + " %"
+                  }
+                  legendTexts={{
+                    moneyLost: "Wrong Predictions",
+                    accuracy: "Right Predictions",
+                  }}
+                  title="Predictions"
+                  timeFrame={timeFrame}
+                />
+              </Card>
+            </div>
           </div>
         </Flex>
         <Grid
@@ -263,6 +266,6 @@ const Dashboard = () => {
   );
 };
 
-export const revalidate = 60;
+//export const revalidate = 60;
 
 export default Dashboard;

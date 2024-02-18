@@ -3,7 +3,7 @@ import prisma from "@/prisma/client";
 import { z } from "zod";
 
 const issueSchema = z.object({
-  amount: z.number(),
+  amount: z.number().max(100).min(2),
 });
 
 export async function POST(request: NextRequest) {
