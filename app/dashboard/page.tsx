@@ -131,7 +131,7 @@ const Dashboard = () => {
   ];
 
   if (isLoading) {
-    return <div>Jetzt warte halt mal kurz du dummkopf...</div>;
+    return <div>Jetzt warte halt mal kurz...</div>;
   }
 
   return (
