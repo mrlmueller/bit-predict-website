@@ -34,7 +34,7 @@ interface CacheEntry {
 const cacheStore: Record<string, CacheEntry> = {};
 
 // Cache validity period in milliseconds (1 hour)
-const CACHE_VALIDITY_PERIOD = 900000;
+const CACHE_VALIDITY_PERIOD = 3600000;
 
 const issueSchema = z.object({
   amount: z.number().min(2),
