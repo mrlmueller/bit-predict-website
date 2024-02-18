@@ -50,7 +50,8 @@ export async function POST(request: NextRequest) {
   ]);
 
   // Include a flag or additional data to indicate if the data was limited
-  const isLimitedData: boolean = adjustedAmount < body.amount;
+  const isLimitedData: boolean =
+    body.amount === 9999999 ? false : adjustedAmount < body.amount;
 
   return NextResponse.json(
     { tradingdata, prediction, scrapeddata, isLimitedData, totalAvailable },
