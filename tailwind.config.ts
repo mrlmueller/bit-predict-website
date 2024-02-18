@@ -12,7 +12,7 @@ const config: Config = {
         chart: "435px", // Add a custom size of 120px
       },
       screens: {
-        xs: "450px",
+        xs: "460px",
       },
       boxShadow: {
         custom: "0 0 20px 0 rgba(0, 0, 0, 0.1)", // Example shadow

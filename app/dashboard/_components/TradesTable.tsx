@@ -25,9 +25,12 @@ const TradesTable = ({ trades, preds, actualData, results }: Props) => {
             <Table.ColumnHeaderCell className="font-semibold xs:hidden">
               Date
             </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="font-semibold ">
-              Prediction
+            <Table.ColumnHeaderCell className="font-semibold">
+              {typeof window !== "undefined" && window.innerWidth < 420
+                ? "Pred"
+                : "Prediction"}
             </Table.ColumnHeaderCell>
+
             <Table.ColumnHeaderCell className="font-semibold ">
               Actual
             </Table.ColumnHeaderCell>
