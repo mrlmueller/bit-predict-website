@@ -50,8 +50,6 @@ const Dashboard = () => {
           totalAvailable,
         } = await response.json();
 
-        // Assuming your original logic required reversing the data arrays
-        // Reverse them only if it aligns with your original data handling logic
         const reversedTradingData = tradingDataResponse.reverse();
         const reversedPrediction = predictionResponse.reverse();
         const reversedScrapedData =
@@ -67,7 +65,6 @@ const Dashboard = () => {
           reversedPrediction[reversedPrediction.length - 1] ?? null
         );
 
-        // Handle result calculation similar to your initial logic
         const initialTrade =
           tradingDataResponse[tradingDataResponse.length - 1];
         setResult(
@@ -78,12 +75,11 @@ const Dashboard = () => {
 
         setAvailableAmount(totalAvailable);
 
-        // Show the popup if the data was limited for x seconds
         if (isLimitedData) {
           setIsLimitedDataPopupOpen(true);
           setTimeout(() => {
             setIsLimitedDataPopupOpen(false);
-          }, 2000);
+          }, 4000);
         }
       } else {
         console.error("Failed to fetch data from API");
@@ -242,7 +238,5 @@ const Dashboard = () => {
     </>
   );
 };
-
-//export const revalidate = 60;
 
 export default Dashboard;

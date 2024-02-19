@@ -28,6 +28,7 @@ interface CacheEntry {
     isLimitedData: boolean;
     totalAvailable: number;
   };
+  usedInSpecialWindow: boolean; // New flag
 }
 
 // Initialize the cache store
@@ -47,19 +48,33 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(validation.error.format(), { status: 400 });
   }
 
+  const currentTime = new Date();
+  const currentHourUTC = currentTime.getUTCHours();
+  const currentMinutesUTC = currentTime.getUTCMinutes();
+
   // Generate a unique cache key based on the request parameters
   const cacheKey = `data-${body.amount}`;
-  const currentTime = new Date();
 
-  // Check if the data is cached and still valid
-  if (
-    cacheStore[cacheKey] &&
-    currentTime.getTime() - cacheStore[cacheKey].timestamp.getTime() <
-      CACHE_VALIDITY_PERIOD
-  ) {
-    return NextResponse.json(cacheStore[cacheKey].data, { status: 200 });
+  // Determine if current UTC time is within the special window
+  const isInSpecialWindow =
+    (currentHourUTC === 23 && currentMinutesUTC >= 30) ||
+    (currentHourUTC === 0 && currentMinutesUTC <= 30);
+
+  // Check if the data is cached
+  if (cacheStore[cacheKey]) {
+    const cacheAge =
+      currentTime.getTime() - cacheStore[cacheKey].timestamp.getTime();
+    const isCacheValid = cacheAge < CACHE_VALIDITY_PERIOD;
+
+    // Use the cache if it's valid and not flagged for refresh
+    if (isCacheValid && !cacheStore[cacheKey].usedInSpecialWindow) {
+      // Special window logic
+      if (isInSpecialWindow) {
+        cacheStore[cacheKey].usedInSpecialWindow = true;
+      }
+      return NextResponse.json(cacheStore[cacheKey].data, { status: 200 });
+    }
   }
-
   // If not cached or cache is invalid, fetch the data from the database
   const totalAvailable = await prisma.tradingdata.count();
   const adjustedAmount = Math.min(body.amount, totalAvailable);
@@ -110,6 +125,7 @@ export async function POST(request: NextRequest) {
       isLimitedData,
       totalAvailable,
     },
+    usedInSpecialWindow: isInSpecialWindow,
   };
 
   // Return the newly fetched data
