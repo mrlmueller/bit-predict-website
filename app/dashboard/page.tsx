@@ -177,8 +177,8 @@ const Dashboard = () => {
                     data={returnData}
                     labelValue={(totalGains - totalLosses).toFixed(2) + " $"}
                     legendTexts={{
-                      moneyLost: "Money Lost",
-                      accuracy: "Money Gained",
+                      moneyLost: "Money Gained",
+                      accuracy: "Money Lost",
                     }}
                     title="Return"
                     timeFrame={timeFrame}
@@ -192,8 +192,8 @@ const Dashboard = () => {
                       ((matches / actualData.length) * 100).toFixed(1) + " %"
                     }
                     legendTexts={{
-                      moneyLost: "Wrong Predictions",
-                      accuracy: "Right Predictions",
+                      moneyLost: "Right Predictions",
+                      accuracy: "Wrong Predictions",
                     }}
                     title="Predictions"
                     timeFrame={timeFrame}
