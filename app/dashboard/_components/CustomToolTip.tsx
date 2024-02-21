@@ -32,8 +32,8 @@ const CustomToolTip: React.FC<CustomToolTipProps> = ({
         }}
       >
         {/* Example content - customize as needed */}
-        <p>{`${formatDateToDayMonthYear(originalDate)}`}</p>
-        <p>{`$ ${payload[0].value}`}</p>
+        <p className="mx-2">{`${formatDateToDayMonthYear(originalDate)}`}</p>
+        <p className="mx-2 font-bold">{`$ ${payload[0].value}`}</p>
       </div>
     );
   }
