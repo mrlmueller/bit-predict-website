@@ -16,6 +16,7 @@ import PieChartComponent from "./_components/PieChart";
 import TimeframeSelector from "./_components/TimeframeSelector";
 import TradesTable from "./_components/TradesTable";
 import { IoIosInformationCircleOutline } from "react-icons/io";
+import DashboardloadingSkeleton from "./_components/DashboardloadingSkeleton";
 
 const Dashboard = () => {
   const [amount, setAmount] = useState<number>(7);
@@ -33,6 +34,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       const response = await fetch("/api/database", {
         method: "POST",
         headers: {
@@ -127,7 +129,7 @@ const Dashboard = () => {
   ];
 
   if (isLoading) {
-    return <div>Jetzt warte halt mal kurz...</div>;
+    return <DashboardloadingSkeleton></DashboardloadingSkeleton>;
   }
 
   return (
@@ -216,7 +218,7 @@ const Dashboard = () => {
                 <MdOutlineAttachMoney size={38} color="#444444" />
               </InvestmentCard>
             </Card>
-            <Card>
+            <Card className="px-[18px] xs:px-7">
               <TradesTable
                 trades={trades}
                 preds={preds}
