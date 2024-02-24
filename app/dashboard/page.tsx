@@ -141,7 +141,7 @@ const Dashboard = () => {
   if (isLoading) {
     return <DashboardloadingSkeleton></DashboardloadingSkeleton>;
   }
-  console.log(trades, preds, actualData);
+
   return (
     <>
       {isLimitedDataPopupOpen && timeFrame !== "Max" && (

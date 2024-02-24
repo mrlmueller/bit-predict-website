@@ -58,7 +58,12 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
   const data = trades.map((trade) => ({
     name: formatDate(new Date(trade.timestamp)), // For the X-axis
     originalDate: trade.timestamp, // For the tooltip
-    value: trade.before_trade_close?.toFixed(2) || 0,
+    value:
+      trade.after_trade_open !== null && trade.after_trade_open !== undefined
+        ? trade.after_trade_open.toFixed(2)
+        : trade.before_trade_close !== null
+        ? trade.before_trade_close.toFixed(2)
+        : "0",
   }));
 
   return (
