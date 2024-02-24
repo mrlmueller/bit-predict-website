@@ -12,7 +12,7 @@ const ChartLegend: React.FC<Props> = ({ children, color }) => {
   return (
     <div className="flex items-center">
       <div className={`${backgroundColor} w-2.5 h-2.5 rounded-full mr-2`}></div>
-      <div className="mr-6">{children}</div>
+      <div className="mr-4 md:mr-6">{children}</div>
     </div>
   );
 };

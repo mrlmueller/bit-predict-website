@@ -157,7 +157,7 @@ const Dashboard = () => {
         </Card>
         <div className="flex flex-col lg:flex-row">
           <Flex className="order-2 lg:order-1 flex flex-col max-h-chart w-full lg:w-[60%]">
-            <Card fullWidth={true} className="mb-8 mt-8 pl-0 lg:mt-0 md:pl-4">
+            <Card fullWidth={true} className="mb-8 mt-8 pl-1 lg:mt-0 md:pl-4">
               <MoneyMadeLostContent
                 trades={trades}
                 timeFrame={timeFrame}
