@@ -6,13 +6,25 @@ export const calculateGainsAndLosses = (trades: tradingdata[]) => {
 
   trades.forEach((trade, index) => {
     if (index < trades.length - 1) {
-      const difference =
-        trades[index + 1].before_trade_close! - trade.before_trade_close!;
+      // Apply the value-choosing logic here
+      const nextTradeValue =
+        trades[index + 1].after_trade_open ??
+        trades[index + 1].before_trade_close;
+      const currentTradeValue =
+        trade.after_trade_open ?? trade.before_trade_close;
 
-      if (difference > 0) {
-        totalGains += difference;
-      } else if (difference < 0) {
-        totalLosses += Math.abs(difference);
+      // Ensure both values are available before calculating the difference
+      if (
+        typeof nextTradeValue === "number" &&
+        typeof currentTradeValue === "number"
+      ) {
+        const difference = nextTradeValue - currentTradeValue;
+
+        if (difference > 0) {
+          totalGains += difference;
+        } else if (difference < 0) {
+          totalLosses += Math.abs(difference);
+        }
       }
     }
   });
