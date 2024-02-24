@@ -18,6 +18,14 @@ import PieChartComponent from "./_components/PieChart";
 import TimeframeSelector from "./_components/TimeframeSelector";
 import TradesTable from "./_components/TradesTable";
 
+interface ApiResponse {
+  tradingdata: tradingdata[];
+  prediction: prediction[];
+  scrapeddata: scrapeddata[];
+  isLimitedData: boolean;
+  totalAvailable: number;
+}
+
 const Dashboard = () => {
   const [amount, setAmount] = useState<number>(7);
   const [timeFrame, setTimeFrame] = useState<string>("Weekly");
@@ -34,6 +42,20 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const cacheKey = `data-${amount}`;
+      const cachedData = localStorage.getItem(cacheKey);
+
+      if (cachedData) {
+        const { data, timestamp } = JSON.parse(cachedData);
+        const isCacheValid = new Date().getTime() - timestamp < 3600000; // 1 hour cache validity
+
+        if (isCacheValid) {
+          updateStateWithFetchedData(data);
+          setIsLoading(false);
+          return;
+        }
+      }
+
       const response = await fetch("/api/database", {
         method: "POST",
         headers: {
@@ -43,56 +65,17 @@ const Dashboard = () => {
       });
 
       if (response.ok) {
-        let {
-          tradingdata: tradingDataResponse,
-          prediction: predictionResponse,
-          scrapeddata: scrapedDataResponse,
-          isLimitedData,
-          totalAvailable,
-        } = await response.json();
+        const data: ApiResponse = await response.json();
 
-        // Reverse the arrays
-        tradingDataResponse = tradingDataResponse.reverse();
-        predictionResponse = predictionResponse.reverse();
-        scrapedDataResponse = scrapedDataResponse.reverse();
-
-        // Debugging: Log the first item of the scrapeddata array after reversal
-
-        // Check if the last item of scrapeddata (first after reversal) has a null higher_lower value
-        if (
-          scrapedDataResponse[scrapedDataResponse.length - 1]?.higher_lower ===
-          null
-        ) {
-          tradingDataResponse.pop();
-          predictionResponse.pop();
-          scrapedDataResponse.pop();
-        }
-
-        // Proceed to set the states with potentially modified arrays
-        setTrades(tradingDataResponse);
-        setPreds(predictionResponse);
-        setActualData(scrapedDataResponse);
-
-        setCurrentPred(
-          predictionResponse[predictionResponse.length - 1] ?? null
+        localStorage.setItem(
+          cacheKey,
+          JSON.stringify({
+            data,
+            timestamp: new Date().getTime(),
+          })
         );
 
-        const initialTrade =
-          tradingDataResponse[tradingDataResponse.length - 1];
-        setResult(
-          initialTrade
-            ? initialTrade.after_trade_open ?? initialTrade.before_trade_close
-            : null
-        );
-
-        setAvailableAmount(totalAvailable);
-
-        if (isLimitedData) {
-          setIsLimitedDataPopupOpen(true);
-          setTimeout(() => {
-            setIsLimitedDataPopupOpen(false);
-          }, 4000);
-        }
+        updateStateWithFetchedData(data);
       } else {
         console.error("Failed to fetch data from API");
       }
@@ -101,6 +84,42 @@ const Dashboard = () => {
 
     fetchData();
   }, [amount]);
+
+  function updateStateWithFetchedData({
+    tradingdata,
+    prediction,
+    scrapeddata,
+    isLimitedData,
+    totalAvailable,
+  }: ApiResponse) {
+    // Reverse data if necessary, apply any transformations
+    const reversedTradingData = tradingdata.reverse();
+    const reversedPrediction = prediction.reverse();
+    const reversedScrapedData = scrapeddata.reverse();
+
+    // Update state
+    setTrades(reversedTradingData);
+    setPreds(reversedPrediction);
+    setActualData(reversedScrapedData);
+
+    setCurrentPred(reversedPrediction[reversedPrediction.length - 1] ?? null);
+
+    const initialTrade = reversedTradingData[reversedTradingData.length - 1];
+    setResult(
+      initialTrade
+        ? initialTrade.after_trade_open ?? initialTrade.before_trade_close
+        : null
+    );
+
+    setAvailableAmount(totalAvailable);
+
+    if (isLimitedData) {
+      setIsLimitedDataPopupOpen(true);
+      setTimeout(() => {
+        setIsLimitedDataPopupOpen(false);
+      }, 4000);
+    }
+  }
 
   const results = trades.map((trade, index) => {
     if (index < trades.length - 1) {
