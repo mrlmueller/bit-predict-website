@@ -32,8 +32,34 @@ const Dashboard = () => {
 
   const [isLoading, setIsLoading] = useState(true);
 
+  interface ApiResponse {
+    tradingdata: tradingdata[];
+    prediction: prediction[];
+    scrapeddata: scrapeddata[];
+    isLimitedData: boolean;
+    totalAvailable: number;
+  }
+
   useEffect(() => {
     const fetchData = async () => {
+      const cacheKey = `data-${amount}`;
+      const cachedData = localStorage.getItem(cacheKey);
+
+      if (cachedData) {
+        const { data, timestamp } = JSON.parse(cachedData);
+
+        // Assuming cache validity period is 1 hour
+        const isCacheValid = new Date().getTime() - timestamp < 3600000;
+
+        if (isCacheValid) {
+          // Use cached data if it's still valid
+          updateStateWithFetchedData(data);
+          setIsLoading(false);
+          return;
+        }
+      }
+
+      // If no valid cache, fetch from API
       const response = await fetch("/api/database", {
         method: "POST",
         headers: {
@@ -43,45 +69,19 @@ const Dashboard = () => {
       });
 
       if (response.ok) {
-        const {
-          tradingdata: tradingDataResponse,
-          prediction: predictionResponse,
-          scrapeddata: scrapedDataResponse,
-          isLimitedData,
-          totalAvailable,
-        } = await response.json();
+        const data: ApiResponse = await response.json();
 
-        const reversedTradingData = tradingDataResponse.reverse();
-        const reversedPrediction = predictionResponse.reverse();
-        const reversedScrapedData =
-          scrapedDataResponse.length > 1
-            ? scrapedDataResponse.reverse()
-            : scrapedDataResponse;
-
-        setTrades(reversedTradingData);
-        setPreds(reversedPrediction);
-        setActualData(reversedScrapedData);
-
-        setCurrentPred(
-          reversedPrediction[reversedPrediction.length - 1] ?? null
+        // Update the cache with new data
+        localStorage.setItem(
+          cacheKey,
+          JSON.stringify({
+            data,
+            timestamp: new Date().getTime(),
+          })
         );
 
-        const initialTrade =
-          tradingDataResponse[tradingDataResponse.length - 1];
-        setResult(
-          initialTrade
-            ? initialTrade.after_trade_open ?? initialTrade.before_trade_close
-            : null
-        );
-
-        setAvailableAmount(totalAvailable);
-
-        if (isLimitedData) {
-          setIsLimitedDataPopupOpen(true);
-          setTimeout(() => {
-            setIsLimitedDataPopupOpen(false);
-          }, 4000);
-        }
+        // Update state with fetched data
+        updateStateWithFetchedData(data);
       } else {
         console.error("Failed to fetch data from API");
       }
@@ -90,6 +90,42 @@ const Dashboard = () => {
 
     fetchData();
   }, [amount]);
+
+  // Helper function to update state with fetched or cached data
+  function updateStateWithFetchedData({
+    tradingdata,
+    prediction,
+    scrapeddata,
+    isLimitedData,
+    totalAvailable,
+  }: ApiResponse) {
+    const reversedTradingData = tradingdata.reverse();
+    const reversedPrediction = prediction.reverse();
+    const reversedScrapedData =
+      scrapeddata.length > 1 ? scrapeddata.reverse() : scrapeddata;
+
+    setTrades(reversedTradingData);
+    setPreds(reversedPrediction);
+    setActualData(reversedScrapedData);
+
+    setCurrentPred(reversedPrediction[reversedPrediction.length - 1] ?? null);
+
+    const initialTrade = tradingdata[tradingdata.length - 1];
+    setResult(
+      initialTrade
+        ? initialTrade.after_trade_open ?? initialTrade.before_trade_close
+        : null
+    );
+
+    setAvailableAmount(totalAvailable);
+
+    if (isLimitedData) {
+      setIsLimitedDataPopupOpen(true);
+      setTimeout(() => {
+        setIsLimitedDataPopupOpen(false);
+      }, 4000);
+    }
+  }
 
   const results = trades.map((trade, index) => {
     if (index < trades.length - 1) {
