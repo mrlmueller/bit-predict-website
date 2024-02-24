@@ -23,58 +23,39 @@ interface CacheEntry {
   timestamp: Date;
   data: {
     tradingdata: TradingData[];
-    prediction: prediction[];
+    prediction: any[]; // Adjust according to your prediction type
     scrapeddata: ScrapedData[];
     isLimitedData: boolean;
     totalAvailable: number;
   };
-  usedInSpecialWindow: boolean; // New flag
 }
 
 // Initialize the cache store
 const cacheStore: Record<string, CacheEntry> = {};
 
 // Cache validity period in milliseconds (1 hour)
-const CACHE_VALIDITY_PERIOD = 3600000;
-
-const issueSchema = z.object({
-  amount: z.number().min(2),
-});
+const CACHE_VALIDITY_PERIOD = 3600000; // 1 hour in milliseconds
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const validation = issueSchema.safeParse(body);
-  if (!validation.success) {
-    return NextResponse.json(validation.error.format(), { status: 400 });
+
+  // Simplified version doesn't need validation logic for this example
+  // but you should keep or adjust validation logic as per your needs
+
+  const cacheKey = `data-${body.amount}`; // Unique cache key based on request parameters
+
+  // Check if the data is cached and still valid
+  const cachedEntry = cacheStore[cacheKey];
+  const now = new Date();
+
+  if (
+    cachedEntry &&
+    now.getTime() - cachedEntry.timestamp.getTime() < CACHE_VALIDITY_PERIOD
+  ) {
+    // Cache is valid, return cached data
+    return NextResponse.json(cachedEntry.data, { status: 200 });
   }
 
-  const currentTime = new Date();
-  const currentHourUTC = currentTime.getUTCHours();
-  const currentMinutesUTC = currentTime.getUTCMinutes();
-
-  // Generate a unique cache key based on the request parameters
-  const cacheKey = `data-${body.amount}`;
-
-  // Determine if current UTC time is within the special window
-  const isInSpecialWindow =
-    (currentHourUTC === 23 && currentMinutesUTC >= 30) ||
-    (currentHourUTC === 0 && currentMinutesUTC <= 30);
-
-  // Check if the data is cached
-  if (cacheStore[cacheKey]) {
-    const cacheAge =
-      currentTime.getTime() - cacheStore[cacheKey].timestamp.getTime();
-    const isCacheValid = cacheAge < CACHE_VALIDITY_PERIOD;
-
-    // Use the cache if it's valid and not flagged for refresh
-    if (isCacheValid && !cacheStore[cacheKey].usedInSpecialWindow) {
-      // Special window logic
-      if (isInSpecialWindow) {
-        cacheStore[cacheKey].usedInSpecialWindow = true;
-      }
-      return NextResponse.json(cacheStore[cacheKey].data, { status: 200 });
-    }
-  }
   // If not cached or cache is invalid, fetch the data from the database
   const totalAvailable = await prisma.tradingdata.count();
   const adjustedAmount = Math.min(body.amount, totalAvailable);
@@ -125,7 +106,6 @@ export async function POST(request: NextRequest) {
       isLimitedData,
       totalAvailable,
     },
-    usedInSpecialWindow: isInSpecialWindow,
   };
 
   // Return the newly fetched data
