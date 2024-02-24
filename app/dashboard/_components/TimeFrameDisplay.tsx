@@ -7,7 +7,8 @@ interface Props {
 
 const TimeFrameDisplay = ({ timeFrame, className }: Props) => {
   const test =
-    " inline-block rounded-md bg-gray-300 px-5 py-1 text-gray-700" + className;
+    " inline-block rounded-md bg-customGray px-5 py-1 text-gray-700" +
+    className;
 
   return <div className={test}>{timeFrame}</div>;
 };

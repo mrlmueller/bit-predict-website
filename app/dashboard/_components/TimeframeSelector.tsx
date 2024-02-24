@@ -18,7 +18,7 @@ const TimeFrameComponent = ({ setAmount, setTimeFrame }: Props) => {
           className={`inline-block cursor-pointer rounded-full px-5 py-2 text-center
             ${
               selectedTimeFrame === timeFrame
-                ? "bg-gray-400 text-gray-900"
+                ? "bg-customGray text-gray-900"
                 : "bg-gray-100 text-gray-900"
             }`}
           onClick={() => {

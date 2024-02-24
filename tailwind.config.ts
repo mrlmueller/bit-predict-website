@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        customGray: "#CCCCCC", // Custom color
+      },
       maxHeight: {
         chart: "435px", // Add a custom size of 120px
       },
