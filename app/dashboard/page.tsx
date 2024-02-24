@@ -34,47 +34,6 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      // Cache key to uniquely identify your data
-      const cacheKey = `cachedData-${amount}`;
-      // Attempt to retrieve cached data
-      const cachedData = localStorage.getItem(cacheKey);
-      const now = new Date().getTime();
-
-      if (cachedData) {
-        const { data, timestamp } = JSON.parse(cachedData);
-        // Check if the cache is still valid (30 minutes = 1800000 milliseconds)
-        if (now - timestamp < 1800000) {
-          const {
-            tradingdata,
-            prediction,
-            scrapeddata,
-            isLimitedData,
-            totalAvailable,
-          } = data;
-
-          // Set states with cached data
-          setTrades(tradingdata);
-          setPreds(prediction);
-          setActualData(scrapeddata);
-          setCurrentPred(prediction[0] ?? null);
-          const initialTrade = tradingdata[0];
-          setResult(
-            initialTrade
-              ? initialTrade.after_trade_open ?? initialTrade.before_trade_close
-              : null
-          );
-          setAvailableAmount(totalAvailable);
-          setIsLimitedDataPopupOpen(isLimitedData);
-          if (isLimitedData) {
-            setTimeout(() => {
-              setIsLimitedDataPopupOpen(false);
-            }, 4000);
-          }
-          setIsLoading(false);
-          return; // Stop execution if valid cache is used
-        }
-      }
-
       const response = await fetch("/api/database", {
         method: "POST",
         headers: {
@@ -114,9 +73,12 @@ const Dashboard = () => {
         setPreds(predictionResponse);
         setActualData(scrapedDataResponse);
 
-        setCurrentPred(predictionResponse[0] ?? null);
+        setCurrentPred(
+          predictionResponse[predictionResponse.length - 1] ?? null
+        );
 
-        const initialTrade = tradingDataResponse[0];
+        const initialTrade =
+          tradingDataResponse[tradingDataResponse.length - 1];
         setResult(
           initialTrade
             ? initialTrade.after_trade_open ?? initialTrade.before_trade_close
@@ -179,7 +141,7 @@ const Dashboard = () => {
   if (isLoading) {
     return <DashboardloadingSkeleton></DashboardloadingSkeleton>;
   }
-
+  console.log(trades, preds, actualData);
   return (
     <>
       {isLimitedDataPopupOpen && timeFrame !== "Max" && (
